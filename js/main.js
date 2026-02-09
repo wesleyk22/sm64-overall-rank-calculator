@@ -17,6 +17,16 @@ const CATEGORY_0_STAR_ID = "xk9gg6d0";
 const N64_ID = "w89rwelk";
 const WIIVC_ID = "nzelreqp";
 
+// Look up table for Category weights (how much they are worth in terms of points)
+// (TODO: allow these to be changed dynamically by the user, maybe save them in local storage?)
+let category_weights = {
+    "wkpoo02r": 1, // 120
+    "7dgrrxk4": 1, // 70
+    "n2y55mko": 1, // 16
+    "7kjpp4k3": 1, // 1 
+    "xk9gg6d0": 1 // 0
+}
+
 /* Lookup tables for both emu and vc for how much time emu saves over console based on
  * the category ID ( these are pulled from this sheet below, except the 0 and 1 star times are estimated:
  * https://docs.google.com/spreadsheets/d/1YBWWIjdP33ubsn0E8IZW8fJwTbqbxtjQJex-izvtSAE/edit?gid=472228052#gid=472228052 )*/
@@ -36,6 +46,14 @@ const wiivc_offsets = {
     "xk9gg6d0": 4 // 0 (estimated)
 }
 
+/* Array for users and their "points" that they have earned from their
+ * place on the leaderboards */
+const usersAndPointsArray = [];
+
+/* Number that will determine what number of placements to get from each
+ * leaderboard */
+const numLBPlacements = 300;
+
 /* Function to that returns the desired amount of 
  * leaderboard placements for a given category ID,
  * game ID, and platform ID. It will return an array
@@ -45,10 +63,15 @@ const wiivc_offsets = {
  * a console run and sorted */
 async function getLeaderboardPlacements(categoryID, gameID) {
     try {
-        /* TODO: try to figureout how to get both times and decide which one is better, this fetch is only returning 
-         * one of raisn's times for example, the better one on the emulator lb, but if converted to console time his 
-         * console pb is actually the better one, so I'll have to look into that */
-        const res = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${gameID}/category/${categoryID}?embed=players`);
+        /* TODO: An issue is occurring because this GET request will return an "overall" leaderboard, but it will not
+         * duplicate times from a player if they have times on the same category but from different platforms, instead
+         * it just takes the best time of the three. The problem is that the converted time to console COULD be better
+         * than their emulator time for example, or wii vc, and this is happening with xRaisn's time where his console pb
+         * which is "better" than his emu pb is not being displayed and instead it's his emulator pb. The fix would
+         * probably involve getting from each platform instead of just all, which may take more get requests or maybe
+         * I can figure out how to do it in one get request still. For now I'm not worried about this though. */
+        const res = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${gameID}/category/${categoryID}?embed=players&top=${numLBPlacements}`);
+
 
         if (!res.ok) {
             throw new Error('HTTP error: ${res.status}');
@@ -123,30 +146,73 @@ async function getLeaderboardPlacements(categoryID, gameID) {
 }
 
 /* Get 120/70/16/1/0 star leaderboard times, that includes N64, emu, and console, */
-// TODO: get 1 and 0 star
-async function getFiveMainCategories() {
-    const lb120 = await getLeaderboardPlacements(CATEGORY_120_STAR_ID, SM64_GAME_ID);
-    console.log("120 Leaderboard Array:")
-    console.log(lb120);
-    const lb70 = await getLeaderboardPlacements(CATEGORY_70_STAR_ID, SM64_GAME_ID);
-    console.log("70 Leaderboard Array:")
-    console.log(lb70);
-    const lb16 = await getLeaderboardPlacements(CATEGORY_16_STAR_ID, SM64_GAME_ID);
-    console.log("16 Leaderboard Array:")
-    console.log(lb16);
-    
+async function getOverallLeaderboard() {
+    const [lb120, lb70, lb16, lb1, lb0] = await Promise.all([
+        getLeaderboardPlacements(CATEGORY_120_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_70_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_16_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_1_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_0_STAR_ID, SM64_GAME_ID),
+    ])
+
+    /* Loop through all 5 of these leaderboards using the
+     *  loopThroughLeaderBoard function */
+    loopThroughLeaderBoard(lb120, 1);
+    loopThroughLeaderBoard(lb70, 1);
+    loopThroughLeaderBoard(lb16, 1);
+    loopThroughLeaderBoard(lb1, 0.5);
+    loopThroughLeaderBoard(lb0, 0.5);
+
+    /* Sort the usersAndPointsArray by points before displaying it */
+    usersAndPointsArray.sort((a, b) => b.points - a.points);
+
+     /* Display overall leaderboard based on their users and points */
+    console.log("users and their points:");
+    console.log(usersAndPointsArray);
+    usersAndPointsArray.forEach((playerObject, index) => {
+        let name = playerObject.name;
+        let points = playerObject.points;
+        let placement = (index+1);
+        visuallyAddPlacement(placement, name, points);
+    });
 }
 
+/* Re-usable function to loop through a leaderboard, and assign points to the usersAndPointsArray */
+function loopThroughLeaderBoard(leaderboard, weight) {
+     /* Loop through the array, check if the user is already in the array,
+     * if the user is already in the array, then add points, if the user was not in 
+     * the array, then add a new user */
+    leaderboard.forEach((run, index) => {
+        // Calculate points (1000 for first place, 500 for second place, 333 for third place, etc...)
+        let calculatedPoints = (weight * ( 1000 * ( 1 / (index + 1) ) ) );
+        let playerName = run.name;
 
-getFiveMainCategories();
+        // Check if the user is already in the usersAndPoints array
+        const player = usersAndPointsArray.find(obj => obj.name === playerName);
+
+        if (player !== undefined) { // If true then we found the object with the matching player name
+            // console.log(`Found player named ${player.name} giving them ${calculatedPoints} points`);
+            player.points += calculatedPoints; // Give them points
+        } else { // otherwise, we need to create a new player object and award them with the points
+            const userObject = new Object({
+                name: run.name,
+                points: calculatedPoints
+            });
+            usersAndPointsArray.push(userObject);
+        }
+    });
+}
+
+/* Function to visually display an overall leaderboard placement in the DOM */
+function visuallyAddPlacement(placement, name, points) {
+    const placementDiv = document.createElement("div");
+    placementDiv.classList.add("leaderboard-place-panel");
+    placementDiv.textContent = `#${placement} - ${name} (${points})`;
+    const overallLeaderboardContainer = document.querySelector(".overall-leaderboard");
+    overallLeaderboardContainer.appendChild(placementDiv);
+}
+
+getOverallLeaderboard();
 
 
-
-
-/* TODO: Convert Emu times to their "console equivalent times" */
-
-/* TODO: Convert VC times to their "console equivalent times" */
-
-/* TODO: Get the console leaderboard times, and combine that with the VC and EMU converted times, if remove
- * duplicates and use the better if there are any */
 
