@@ -4,7 +4,7 @@
     --mario-red: #E52521;
     --mario-blue: #3B5BA7; 
     --mario-yellow: #F7D51D; 
-    --mario-green: #4CAF50; 
+    --mario-green: #2d6b2f; 
     --mario-brown: #8B5A2B; 
     --mario-white: #FFFFFF;
     --panel-color: #737C71;
@@ -64,7 +64,19 @@ body {
 }
 
 /*  */
-.overall-leaderboard {
+.overall-leaderboard-container {
+    width: 75%;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+
+}
+
+/*  */
+.category-weights-container {
     background-color: none;
     width: 75%;
     max-width: 700px;
@@ -75,3 +87,74 @@ body {
     padding: 1rem;
 }
 
+/* Styling for the navigation panel */
+.nav-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 3.5rem;
+}
+
+.overall-lb-nav-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 3.5rem;
+    font-size: 2rem;
+}
+
+.lb-button {
+    background-color: var(--mario-green);
+    /* border-left-color: #474d45;
+    border-right-color: #a0ad9d; */
+    border-color: var(--mario-green);
+}
+
+.category-weights-button {
+    background-color: var(--mario-blue);
+    /* border-left-color: #474d45;
+    border-right-color: #a0ad9d; */
+    border-color: var(--mario-blue);
+}
+
+.nav-button {
+    font-size: 1.3rem;
+    width: 150px;
+    height: 100px;
+    border-style: outset;
+    border-width: 1rem;
+    color: white;
+}
+
+.nav-button:hover {
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+/* Styling for the bottom navigation buttons for the overall leaderboard */
+.page-cycle-left, 
+.page-cycle-right {
+    background-color: var(--panel-color);
+    color: black;
+    font-size: 3rem;
+    border-left-color: #474d45;
+    border-right-color: #a0ad9d;
+}
+
+/* Class for "hiding" an element (used by js file) */
+.hidden {
+    display: none;
+}
+
+/* styling for the spinner */
+.fa-spinner {
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mario-white);
+}

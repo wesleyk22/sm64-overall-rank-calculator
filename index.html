@@ -9,9 +9,24 @@
 </head>
 <body>
     <div class="title-panel">SM64 Overall Rank Leaderboard</div>
-        <div class="overall-leaderboard">
+        <div class="nav-panel">
+            <button class="nav-button lb-button"><span style="position: relative; top: 85px;">Leaderboard</span></button>
+            
+            <button class="nav-button category-weights-button"><span style="position: relative; top: 85px;">Category Weights</span></button>
+        </div>
+        <div class="overall-leaderboard-container">
             <!-- This is where leaderboard placements will be dynamically
               -- added through javascript -->
+              <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
+        <div class="overall-lb-nav-panel">
+            <!-- Font awesome icons used here -->
+            <button class="page-cycle-left nav-button"><i class="fa-solid fa-arrow-left"></i></button>
+            <span class="page-text">Current page: 1</span>
+            <button class="page-cycle-right nav-button"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="category-weights-container hidden">
+            <div>test</div>
         </div>
     <script src="js/main.js"></script>
 </body>

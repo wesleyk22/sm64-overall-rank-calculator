@@ -52,7 +52,21 @@ const usersAndPointsArray = [];
 
 /* Number that will determine what number of placements to get from each
  * leaderboard */
-const numLBPlacements = 300;
+const numLBPlacements = 125;
+
+/* Number that represents the current page that is being displayed */
+let currentPage = 1;
+let finalPage = 0; // This will be calculated and set to a number after the usersAndPointsArray is completed 
+
+/* HTML elements that are selected and assigned to variables */
+const overallLeaderboardContainer = document.querySelector(".overall-leaderboard-container");
+const categoryWeightsContainer = document.querySelector(".category-weights-container");
+const overallLeaderboardButton = document.querySelector(".lb-button");
+const categoryWeightsButton = document.querySelector(".category-weights-button");
+const overallLeaderboardNavPanel = document.querySelector(".overall-lb-nav-panel")
+const cycleLeftButton = document.querySelector(".page-cycle-left");
+const cycleRightButton = document.querySelector(".page-cycle-right");
+const pageText = document.querySelector(".page-text");
 
 /* Function to that returns the desired amount of 
  * leaderboard placements for a given category ID,
@@ -166,15 +180,23 @@ async function getOverallLeaderboard() {
     /* Sort the usersAndPointsArray by points before displaying it */
     usersAndPointsArray.sort((a, b) => b.points - a.points);
 
+    /* Based on the size of the array, calculate the final page number
+     * and set that variable accordingly */
+    finalPage = Math.floor( usersAndPointsArray.length / 50 ); // The final page will be the length divided by 50 rounded down
+    console.log(`final page calculated to be ${finalPage}`);
+    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
+
      /* Display overall leaderboard based on their users and points */
     console.log("users and their points:");
     console.log(usersAndPointsArray);
-    usersAndPointsArray.forEach((playerObject, index) => {
-        let name = playerObject.name;
-        let points = playerObject.points;
-        let placement = (index+1);
-        visuallyAddPlacement(placement, name, points);
-    });
+    // Start by displaying the first page
+    visuallyDisplayPage(currentPage);
+    // usersAndPointsArray.forEach((playerObject, index) => {
+    //     let name = playerObject.name;
+    //     let points = playerObject.points;
+    //     let placement = (index+1);
+    //     visuallyAddPlacement(placement, name, points);
+    // });
 }
 
 /* Re-usable function to loop through a leaderboard, and assign points to the usersAndPointsArray */
@@ -207,12 +229,67 @@ function loopThroughLeaderBoard(leaderboard, weight) {
 function visuallyAddPlacement(placement, name, points) {
     const placementDiv = document.createElement("div");
     placementDiv.classList.add("leaderboard-place-panel");
-    placementDiv.textContent = `#${placement} - ${name} (${points})`;
-    const overallLeaderboardContainer = document.querySelector(".overall-leaderboard");
+    placementDiv.textContent = `#${placement} - ${name} (${points.toFixed(2)})`;
     overallLeaderboardContainer.appendChild(placementDiv);
+}
+
+/* Function to display a "page" of the leaderboard. Each page will have 50
+ * placements */
+function visuallyDisplayPage(pageNum) {
+    // Remove all placements that are inside leaderboard container
+    overallLeaderboardContainer.replaceChildren(); // removes all children, its a misleading function name since we aren't replacing anything yet
+    bottomPlacement = pageNum * 50; // What the bottom of the page will have
+    topPlacement = bottomPlacement - 49; // What the top of the page will have
+    for (let i = topPlacement; i <= bottomPlacement; i++) {
+        if (usersAndPointsArray[i-1] !== undefined) { // Make sure its defined
+            visuallyAddPlacement(i, usersAndPointsArray[i-1].name, usersAndPointsArray[i-1].points);
+            isOnFinalPage = false;
+        } else { // Otherwise if it's not defined that means that this is the final placement and we are on the final page
+            isOnFinalPage = true;
+        }
+        
+    }
+
 }
 
 getOverallLeaderboard();
 
+/* Functionality for the overall leaderboard button */
+overallLeaderboardButton.addEventListener('click', () => {
+    console.log("lb button clicked");
+    categoryWeightsContainer.classList.add("hidden");
+    overallLeaderboardContainer.classList.remove("hidden");
+});
 
+/* Functionality for the category weights button */
+categoryWeightsButton.addEventListener('click', () => {
+    console.log("category weights button clicked");
+    overallLeaderboardContainer.classList.add("hidden");
+    categoryWeightsContainer.classList.remove("hidden");
+});
+
+/* Functionality for the left and right buttons found in the bottom
+ * navigation panel for the overall leaderboard */
+cycleLeftButton.addEventListener('click', () => {
+    console.log("cycle left button clicked");
+    if (currentPage > 1) { // Make sure it's atleast greater than 1
+        currentPage--;
+        // Scroll back to top of page
+        window.scrollTo(0, 0);
+    }
+    // Place this text before
+    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
+    visuallyDisplayPage(currentPage);
+});
+
+cycleRightButton.addEventListener('click', () => {
+    console.log("cycle right button clicked");
+    if (currentPage < finalPage) {
+        currentPage++;
+        // Scroll back to top of page
+        window.scrollTo(0, 0);
+    }
+    visuallyDisplayPage(currentPage);
+    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
+});
 
