@@ -137,7 +137,9 @@ body {
 
 /* Styling for the bottom navigation buttons for the overall leaderboard */
 .page-cycle-left, 
-.page-cycle-right {
+.page-cycle-right,
+.slider-left-btn,
+.slider-right-btn {
     background-color: var(--panel-color);
     color: black;
     font-size: 3rem;
@@ -158,3 +160,24 @@ body {
     justify-content: center;
     color: var(--mario-white);
 }
+
+/* Styling for the category weight sliders */
+.category-weight-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+}
+
+.category-weight-slider span {
+    width: 300px;
+}
+
+/* Styling for the slider buttons */
+.slider-left-btn, 
+.slider-right-btn {
+    padding: 1rem;
+    margin: 0.5rem;
+    border-width: 1rem;
+}
+

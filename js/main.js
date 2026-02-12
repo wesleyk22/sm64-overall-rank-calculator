@@ -258,6 +258,7 @@ getOverallLeaderboard();
 overallLeaderboardButton.addEventListener('click', () => {
     console.log("lb button clicked");
     categoryWeightsContainer.classList.add("hidden");
+    overallLeaderboardNavPanel.classList.remove("hidden");
     overallLeaderboardContainer.classList.remove("hidden");
 });
 
@@ -265,6 +266,7 @@ overallLeaderboardButton.addEventListener('click', () => {
 categoryWeightsButton.addEventListener('click', () => {
     console.log("category weights button clicked");
     overallLeaderboardContainer.classList.add("hidden");
+    overallLeaderboardNavPanel.classList.add("hidden");
     categoryWeightsContainer.classList.remove("hidden");
 });
 
@@ -293,3 +295,26 @@ cycleRightButton.addEventListener('click', () => {
     pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
 });
 
+/* Select all left sliders for category weights and add event listeners to them */
+const leftSliders = document.querySelectorAll(".slider-left-btn");
+
+leftSliders.forEach(slider => {
+    slider.addEventListener('click', () => {
+        console.log("left slider clicked");
+        /* Check the category id of the slider that we are clicking */
+        let categoryId = slider.parentElement.dataset.categoryId;
+        console.log(`left slider with category id of ${categoryId} clicked`);
+    });
+});
+
+/* Select all right sliders for category weights and add event listeners to them */
+const rightSliders = document.querySelectorAll(".slider-right-btn");
+
+rightSliders.forEach(slider => {
+    slider.addEventListener('click', () => {
+        console.log("right slider clicked");
+        /* Check the category id of the slider that we are clicking */
+        let categoryId = slider.parentElement.dataset.categoryId;
+        console.log(`right slider with category id of ${categoryId} clicked`);
+    });
+});
