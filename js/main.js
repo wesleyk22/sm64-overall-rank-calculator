@@ -20,11 +20,11 @@ const WIIVC_ID = "nzelreqp";
 // Look up table for Category weights (how much they are worth in terms of points)
 // (TODO: allow these to be changed dynamically by the user, maybe save them in local storage?)
 let category_weights = {
-    "wkpoo02r": 1, // 120
-    "7dgrrxk4": 1, // 70
-    "n2y55mko": 1, // 16
-    "7kjpp4k3": 1, // 1 
-    "xk9gg6d0": 1 // 0
+    "wkpoo02r": 1.0, // 120
+    "7dgrrxk4": 1.0, // 70
+    "n2y55mko": 1.0, // 16
+    "7kjpp4k3": 1.0, // 1 
+    "xk9gg6d0": 1.0 // 0
 }
 
 /* Lookup tables for both emu and vc for how much time emu saves over console based on
@@ -52,7 +52,7 @@ const usersAndPointsArray = [];
 
 /* Number that will determine what number of placements to get from each
  * leaderboard */
-const numLBPlacements = 125;
+const numLBPlacements = 1000;
 
 /* Number that represents the current page that is being displayed */
 let currentPage = 1;
@@ -75,7 +75,7 @@ const pageText = document.querySelector(".page-text");
  * will have the name of the runner, time of the run, and 
  * if it was emulator or vc it's converted to the time of
  * a console run and sorted */
-async function getLeaderboardPlacements(categoryID, gameID) {
+async function getLeaderboardPlacements(CategoryID, gameID) {
     try {
         /* TODO: An issue is occurring because this GET request will return an "overall" leaderboard, but it will not
          * duplicate times from a player if they have times on the same category but from different platforms, instead
@@ -84,7 +84,7 @@ async function getLeaderboardPlacements(categoryID, gameID) {
          * which is "better" than his emu pb is not being displayed and instead it's his emulator pb. The fix would
          * probably involve getting from each platform instead of just all, which may take more get requests or maybe
          * I can figure out how to do it in one get request still. For now I'm not worried about this though. */
-        const res = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${gameID}/category/${categoryID}?embed=players&top=${numLBPlacements}`);
+        const res = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${gameID}/category/${CategoryID}?embed=players&top=${numLBPlacements}`);
 
 
         if (!res.ok) {
@@ -95,9 +95,9 @@ async function getLeaderboardPlacements(categoryID, gameID) {
        
         console.log(data);
 
-        /* Loop through them and add them to a 120 runs array, creating an array of objects
+        /* Loop through them and add them to a runs array, creating an array of objects
         * that will each represent a run and how long it took in seconds */
-        const lb120array = [];
+        const lbarray = [];
 
         // Get the length of the players/runs that we will loop through
         console.log(data.data.runs.length);
@@ -127,11 +127,11 @@ async function getLeaderboardPlacements(categoryID, gameID) {
                 platformInStringForm = "console";
             } else if (platform == N64_ID && emulated == true) { // it's emulator
                 platformInStringForm = "emulator";
-                let timeToAdd = emulator_offsets[categoryID];
+                let timeToAdd = emulator_offsets[CategoryID];
                 consoleRunTime += timeToAdd;
             } else if (platform == WIIVC_ID) { // it's VC
                 platformInStringForm = "virtual_console";
-                let timeToAdd = wiivc_offsets[categoryID];
+                let timeToAdd = wiivc_offsets[CategoryID];
                 consoleRunTime += timeToAdd;
             }
 
@@ -143,39 +143,43 @@ async function getLeaderboardPlacements(categoryID, gameID) {
                 platform: platformInStringForm,
                 consoleEquivalentTime: consoleRunTime
             });
-            lb120array.push(runObject);
+            lbarray.push(runObject);
 
         }
 
-        /* Sort the lb120array in ascending order by the consoleEquivalentTime value 
+        /* Sort the lbarray in ascending order by the consoleEquivalentTime value 
          * so that emulator and wiiVC runs are put in the right "rank" as far as their 
          * console equivalent time goes */
-        lb120array.sort((a, b) => a.consoleEquivalentTime - b.consoleEquivalentTime)
+        lbarray.sort((a, b) => a.consoleEquivalentTime - b.consoleEquivalentTime)
 
-        return lb120array;
+        return lbarray;
 
     } catch (err) {
         console.error("Fetch failed:", err);
     }
 }
 
-/* Get 120/70/16/1/0 star leaderboard times, that includes N64, emu, and console, */
-async function getOverallLeaderboard() {
-    const [lb120, lb70, lb16, lb1, lb0] = await Promise.all([
-        getLeaderboardPlacements(CATEGORY_120_STAR_ID, SM64_GAME_ID),
-        getLeaderboardPlacements(CATEGORY_70_STAR_ID, SM64_GAME_ID),
-        getLeaderboardPlacements(CATEGORY_16_STAR_ID, SM64_GAME_ID),
-        getLeaderboardPlacements(CATEGORY_1_STAR_ID, SM64_GAME_ID),
-        getLeaderboardPlacements(CATEGORY_0_STAR_ID, SM64_GAME_ID),
-    ])
+let lb120 = [];
+let lb70 = [];
+let lb16 = [];
+let lb1 = [];
+let lb0 = [];
 
-    /* Loop through all 5 of these leaderboards using the
-     *  loopThroughLeaderBoard function */
-    loopThroughLeaderBoard(lb120, 1);
-    loopThroughLeaderBoard(lb70, 1);
-    loopThroughLeaderBoard(lb16, 1);
-    loopThroughLeaderBoard(lb1, 0.5);
-    loopThroughLeaderBoard(lb0, 0.5);
+/* Using the variables for the 5 categories, sort the overall leaderboard (AKA
+ * the usersAndPointsArray) based on the category weights */
+function displayOverallLeaderboard() {
+    /* Clear the usersAndPoints array */
+    usersAndPointsArray.length = 0;
+    /* Clear it visually as well */
+    overallLeaderboardContainer.replaceChildren(); 
+    /* Loop through the 5 leaderboards that we got in the getFiveCategories()
+     * function, based on the category_weights object that is customizable
+     * by the user, creating a new overall leaderboard  */
+    loopThroughLeaderBoard(lb120, category_weights["wkpoo02r"]); // 120 
+    loopThroughLeaderBoard(lb70, category_weights["7dgrrxk4"]); // 70
+    loopThroughLeaderBoard(lb16, category_weights["n2y55mko"]); // 16
+    loopThroughLeaderBoard(lb1, category_weights["7kjpp4k3"]); // 1
+    loopThroughLeaderBoard(lb0, category_weights["xk9gg6d0"]); // 0
 
     /* Sort the usersAndPointsArray by points before displaying it */
     usersAndPointsArray.sort((a, b) => b.points - a.points);
@@ -191,13 +195,25 @@ async function getOverallLeaderboard() {
     console.log(usersAndPointsArray);
     // Start by displaying the first page
     visuallyDisplayPage(currentPage);
-    // usersAndPointsArray.forEach((playerObject, index) => {
-    //     let name = playerObject.name;
-    //     let points = playerObject.points;
-    //     let placement = (index+1);
-    //     visuallyAddPlacement(placement, name, points);
-    // });
 }
+
+/* Get 120/70/16/1/0 star leaderboard times, that includes N64, emu, and console, assigning them
+to the variables above */
+async function getFiveCategories() {
+    [lb120, lb70, lb16, lb1, lb0] = await Promise.all([
+        getLeaderboardPlacements(CATEGORY_120_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_70_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_16_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_1_STAR_ID, SM64_GAME_ID),
+        getLeaderboardPlacements(CATEGORY_0_STAR_ID, SM64_GAME_ID),
+    ])
+    /* After getting the five categories, that is when we can display the 
+    overall leaderboard: */
+    displayOverallLeaderboard();
+}
+// Run the above function (TODO: just make it anonymous since we only need to run it once)
+getFiveCategories();
+
 
 /* Re-usable function to loop through a leaderboard, and assign points to the usersAndPointsArray */
 function loopThroughLeaderBoard(leaderboard, weight) {
@@ -252,7 +268,27 @@ function visuallyDisplayPage(pageNum) {
 
 }
 
-getOverallLeaderboard();
+/* Function to both visually and programatically update the weights of
+ * each category */
+function updateCategoryWeight(CategoryID, weightChange) {
+    /* Check if the category ID exists in the lookup table */
+    if (CategoryID in category_weights) {
+        console.log(`category id of ${CategoryID} found in array`);
+        /* Programatically update weight with weightChange */
+        console.log(`original category weight: ${category_weights[CategoryID]}`);
+        category_weights[CategoryID] += weightChange;
+        console.log(`new category weight: ${category_weights[CategoryID].value}`);
+        /* Visually update weight on the html */
+        // Find the slider by category ID
+        const categoryWeightSlider = document.querySelector(`[data-category-id="${CategoryID}"]`);
+        // Find the slider-text class that should be a child element of the category weight slider
+        const sliderText = categoryWeightSlider.querySelector(".slider-text");
+        // Calculate percentage
+        const percentAsInteger =  (category_weights[CategoryID] * 100);
+        // Update the text
+        sliderText.textContent = `${percentAsInteger.toFixed(0)}%`;
+    }
+}
 
 /* Functionality for the overall leaderboard button */
 overallLeaderboardButton.addEventListener('click', () => {
@@ -260,6 +296,8 @@ overallLeaderboardButton.addEventListener('click', () => {
     categoryWeightsContainer.classList.add("hidden");
     overallLeaderboardNavPanel.classList.remove("hidden");
     overallLeaderboardContainer.classList.remove("hidden");
+    // Display the overall leaderboard
+    displayOverallLeaderboard();
 });
 
 /* Functionality for the category weights button */
@@ -302,8 +340,10 @@ leftSliders.forEach(slider => {
     slider.addEventListener('click', () => {
         console.log("left slider clicked");
         /* Check the category id of the slider that we are clicking */
-        let categoryId = slider.parentElement.dataset.categoryId;
-        console.log(`left slider with category id of ${categoryId} clicked`);
+        // let CategoryID = slider.parentElement.dataset.CategoryID;
+        let CategoryID = slider.parentElement.getAttribute('data-category-id');
+        console.log(`left slider with category id of ${CategoryID} clicked`);
+        updateCategoryWeight(CategoryID, -0.1); // Subtract 10%
     });
 });
 
@@ -314,7 +354,12 @@ rightSliders.forEach(slider => {
     slider.addEventListener('click', () => {
         console.log("right slider clicked");
         /* Check the category id of the slider that we are clicking */
-        let categoryId = slider.parentElement.dataset.categoryId;
-        console.log(`right slider with category id of ${categoryId} clicked`);
+        // let CategoryID = slider.parentElement.dataset.CategoryID;
+        let CategoryID = slider.parentElement.getAttribute('data-category-id');
+        console.log(`right slider with category id of ${CategoryID} clicked`);
+        updateCategoryWeight(CategoryID, 0.1); // Add 10%
     });
 });
+
+
+
