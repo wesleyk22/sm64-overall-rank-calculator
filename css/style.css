@@ -181,3 +181,8 @@ body {
     border-width: 1rem;
 }
 
+.slider-left-btn:hover,
+.slider-right-btn:hover {
+    cursor: pointer;
+    opacity: 0.85;
+}

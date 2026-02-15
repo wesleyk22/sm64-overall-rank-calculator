@@ -46,6 +46,19 @@ const wiivc_offsets = {
     "xk9gg6d0": 4 // 0 (estimated)
 }
 
+/* Arrays for the 5 categories, these will be accessed and re-used throughout the code and
+ * be assigned values in the getFiveCategories() function and then constantly
+ * be re-used to by the loopThroughLeaderBoard() function to create the overallLeaderboard
+ *  which is usersAndPointsARray */
+let lb120 = [];
+let lb70 = [];
+let lb16 = [];
+let lb1 = [];
+let lb0 = [];
+
+// Variable to keep track of when we finally got the data
+let dataRetrieved = false;
+
 /* Array for users and their "points" that they have earned from their
  * place on the leaderboards */
 const usersAndPointsArray = [];
@@ -159,42 +172,41 @@ async function getLeaderboardPlacements(CategoryID, gameID) {
     }
 }
 
-let lb120 = [];
-let lb70 = [];
-let lb16 = [];
-let lb1 = [];
-let lb0 = [];
+
 
 /* Using the variables for the 5 categories, sort the overall leaderboard (AKA
  * the usersAndPointsArray) based on the category weights */
 function displayOverallLeaderboard() {
-    /* Clear the usersAndPoints array */
-    usersAndPointsArray.length = 0;
-    /* Clear it visually as well */
-    overallLeaderboardContainer.replaceChildren(); 
-    /* Loop through the 5 leaderboards that we got in the getFiveCategories()
-     * function, based on the category_weights object that is customizable
-     * by the user, creating a new overall leaderboard  */
-    loopThroughLeaderBoard(lb120, category_weights["wkpoo02r"]); // 120 
-    loopThroughLeaderBoard(lb70, category_weights["7dgrrxk4"]); // 70
-    loopThroughLeaderBoard(lb16, category_weights["n2y55mko"]); // 16
-    loopThroughLeaderBoard(lb1, category_weights["7kjpp4k3"]); // 1
-    loopThroughLeaderBoard(lb0, category_weights["xk9gg6d0"]); // 0
+    // Make sure the data is retrieved, otherwise there's nothing to display
+    if (dataRetrieved == true) {
+        /* Clear the usersAndPoints array */
+        usersAndPointsArray.length = 0;
+        /* Clear it visually as well */
+        overallLeaderboardContainer.replaceChildren(); 
+        /* Loop through the 5 leaderboards that we got in the getFiveCategories()
+        * function, based on the category_weights object that is customizable
+        * by the user, creating a new overall leaderboard  */
+        loopThroughLeaderBoard(lb120, category_weights["wkpoo02r"]); // 120 
+        loopThroughLeaderBoard(lb70, category_weights["7dgrrxk4"]); // 70
+        loopThroughLeaderBoard(lb16, category_weights["n2y55mko"]); // 16
+        loopThroughLeaderBoard(lb1, category_weights["7kjpp4k3"]); // 1
+        loopThroughLeaderBoard(lb0, category_weights["xk9gg6d0"]); // 0
 
-    /* Sort the usersAndPointsArray by points before displaying it */
-    usersAndPointsArray.sort((a, b) => b.points - a.points);
+        /* Sort the usersAndPointsArray by points before displaying it */
+        usersAndPointsArray.sort((a, b) => b.points - a.points);
 
-    /* Based on the size of the array, calculate the final page number
-     * and set that variable accordingly */
-    finalPage = Math.floor( usersAndPointsArray.length / 50 ); // The final page will be the length divided by 50 rounded down
-    console.log(`final page calculated to be ${finalPage}`);
-    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
+        /* Based on the size of the array, calculate the final page number
+        * and set that variable accordingly */
+        finalPage = Math.floor( usersAndPointsArray.length / 50 ); // The final page will be the length divided by 50 rounded down
+        console.log(`final page calculated to be ${finalPage}`);
+        pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
 
-     /* Display overall leaderboard based on their users and points */
-    console.log("users and their points:");
-    console.log(usersAndPointsArray);
-    // Start by displaying the first page
-    visuallyDisplayPage(currentPage);
+        /* Display overall leaderboard based on their users and points */
+        console.log("users and their points:");
+        console.log(usersAndPointsArray);
+        // Start by displaying the first page
+        visuallyDisplayPage(currentPage);
+    }
 }
 
 /* Get 120/70/16/1/0 star leaderboard times, that includes N64, emu, and console, assigning them
@@ -207,6 +219,7 @@ async function getFiveCategories() {
         getLeaderboardPlacements(CATEGORY_1_STAR_ID, SM64_GAME_ID),
         getLeaderboardPlacements(CATEGORY_0_STAR_ID, SM64_GAME_ID),
     ])
+    dataRetrieved = true;
     /* After getting the five categories, that is when we can display the 
     overall leaderboard: */
     displayOverallLeaderboard();
@@ -303,9 +316,9 @@ overallLeaderboardButton.addEventListener('click', () => {
 /* Functionality for the category weights button */
 categoryWeightsButton.addEventListener('click', () => {
     console.log("category weights button clicked");
-    overallLeaderboardContainer.classList.add("hidden");
-    overallLeaderboardNavPanel.classList.add("hidden");
-    categoryWeightsContainer.classList.remove("hidden");
+        overallLeaderboardContainer.classList.add("hidden");
+        overallLeaderboardNavPanel.classList.add("hidden");
+        categoryWeightsContainer.classList.remove("hidden");    
 });
 
 /* Functionality for the left and right buttons found in the bottom
