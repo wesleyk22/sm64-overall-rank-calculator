@@ -18,13 +18,12 @@ html {
 
 body {
     background-color: var(--yellow-menu-color);
-    border-style: inset;
+    border: 2rem inset #a9841d;
     padding: 2rem;
-    border-top-color: #705713;
+    /* border-top-color: #705713;
     border-right-color: #49390d;
     border-bottom-color: #b18a1f;
-    border-left-color: #ffcb3c;
-    border-width: 1.5rem;
+    border-left-color: #ffcb3c; */
     margin: 2rem;
 }
 
@@ -37,18 +36,12 @@ body {
     text-align: center;
     font-size: 2rem;
     padding: 0.2rem;
-    border-style: outset;
-    border-width: 1rem;
-    border-left-color: #474d45;
-    border-right-color: #a0ad9d;
+    border: 1rem outset #a0ad9d;
 }
 
 .normal-panel {
     background-color: var(--panel-color);
-    border-style: outset;
-    border-width: 1rem;
-    border-left-color: #474d45;
-    border-right-color: #a0ad9d;
+    border: 1rem outset #474d45;
 }
 
 /* This is the styling for each leaderboard rank"
@@ -57,8 +50,7 @@ body {
     background-color: var(--panel-color);
     border-style: outset;
     border-width: 1rem;
-    border-left-color: #474d45;
-    border-right-color: #a0ad9d;
+    border-color: #a0ad9d;
     font-size: 1.5rem;
     padding: 0.75rem;
 }
@@ -68,12 +60,29 @@ body {
     width: 75%;
     max-width: 700px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
     gap: 1rem;
     padding: 1rem;
-
 }
+
+/* Styling for the actually leaderboard placements container that's 
+ * scrollable and placements are added to it */
+.overall-leaderboard-placements-container {
+    /* Make it scrollable */
+    height: 600px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    /* Firefox styling for the scrollbar */
+    scrollbar-color: #49390d var(--yellow-menu-color);
+    /* Styling to make it "inset" like the search bar is */
+    border: 1rem inset #a9841d;
+    margin-top: 1rem;
+}
+
+
+
 
 /*  */
 .category-weights-container {
@@ -109,16 +118,12 @@ body {
 
 .lb-button {
     background-color: var(--mario-green);
-    /* border-left-color: #474d45;
-    border-right-color: #a0ad9d; */
-    border-color: var(--mario-green);
+    border-color: #3b8b3e;
 }
 
 .category-weights-button {
     background-color: var(--mario-blue);
-    /* border-left-color: #474d45;
-    border-right-color: #a0ad9d; */
-    border-color: var(--mario-blue);
+    border-color: #4468be; 
 }
 
 .nav-button {
@@ -143,8 +148,9 @@ body {
     background-color: var(--panel-color);
     color: black;
     font-size: 3rem;
-    border-left-color: #474d45;
-    border-right-color: #a0ad9d;
+    /* border-left-color: #474d45;
+    border-right-color: #a0ad9d; */
+    border: 1rem outset #a0ad9d;
 }
 
 /* Class for "hiding" an element (used by js file) */
@@ -186,3 +192,58 @@ body {
     cursor: pointer;
     opacity: 0.85;
 }
+
+/* Styling for the player search bar */
+.player-search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.player-search-bar input {
+    font-size: 2rem;
+    font-family: cursive;
+    /* border-style: inset;
+    border-top-color: #705713;
+    border-right-color: #49390d;
+    border-bottom-color: #b18a1f;
+    border-left-color: #ffcb3c; */
+    border: 1rem inset #a9841d;
+    background-color: var(--yellow-menu-color);
+    width: 75%;
+}
+
+/* Color for the placeholder text */
+.player-search-bar input::placeholder {
+    color: #49390d;
+}
+
+
+/* Styling for when the player search bar is clicked on or "focused" */
+.player-search-bar input:focus {
+    outline: none;
+}
+
+.player-search-bar button {
+    font-size: 2rem;
+    font-family: cursive;
+    color: black;
+    background-color: var(--panel-color);
+    /* border-left-color: #474d45;
+    border-right-color: #a0ad9d; */
+    border: 1rem outset #a0ad9d;
+    /* width: 100px; */
+}
+
+.highlight {
+   background: var(--mario-yellow);
+   /* Add this transition so that when the background property DOES change
+    * which will happen through javascript, that it happens smoothly */
+   transition: background 1s ease; 
+}
+
+.highlight.fade {
+    background: var(--panel-color);;
+}
+

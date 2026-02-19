@@ -73,6 +73,7 @@ let finalPage = 0; // This will be calculated and set to a number after the user
 
 /* HTML elements that are selected and assigned to variables */
 const overallLeaderboardContainer = document.querySelector(".overall-leaderboard-container");
+const overallLeaderboardPlacementsContainer = document.querySelector(".overall-leaderboard-placements-container")
 const categoryWeightsContainer = document.querySelector(".category-weights-container");
 const overallLeaderboardButton = document.querySelector(".lb-button");
 const categoryWeightsButton = document.querySelector(".category-weights-button");
@@ -80,6 +81,8 @@ const overallLeaderboardNavPanel = document.querySelector(".overall-lb-nav-panel
 const cycleLeftButton = document.querySelector(".page-cycle-left");
 const cycleRightButton = document.querySelector(".page-cycle-right");
 const pageText = document.querySelector(".page-text");
+const searchTextField = document.querySelector(".search-text-field");
+const searchButton = document.querySelector(".search-button");
 
 /* Function to that returns the desired amount of 
  * leaderboard placements for a given category ID,
@@ -181,8 +184,13 @@ function displayOverallLeaderboard() {
     if (dataRetrieved == true) {
         /* Clear the usersAndPoints array */
         usersAndPointsArray.length = 0;
-        /* Clear it visually as well */
-        overallLeaderboardContainer.replaceChildren(); 
+        // commenting this out since I think it's repetitive
+        // /* (remove all placement panels) */
+        // [...overallLeaderboardContainer.children].forEach(child => {
+        //     if (child.classList.contains("leaderboard-place-panel")) {
+        //         child.remove();
+        //     }
+        // });
         /* Loop through the 5 leaderboards that we got in the getFiveCategories()
         * function, based on the category_weights object that is customizable
         * by the user, creating a new overall leaderboard  */
@@ -259,14 +267,18 @@ function visuallyAddPlacement(placement, name, points) {
     const placementDiv = document.createElement("div");
     placementDiv.classList.add("leaderboard-place-panel");
     placementDiv.textContent = `#${placement} - ${name} (${points.toFixed(2)})`;
-    overallLeaderboardContainer.appendChild(placementDiv);
+    overallLeaderboardPlacementsContainer.appendChild(placementDiv);
 }
 
 /* Function to display a "page" of the leaderboard. Each page will have 50
  * placements */
 function visuallyDisplayPage(pageNum) {
-    // Remove all placements that are inside leaderboard container
-    overallLeaderboardContainer.replaceChildren(); // removes all children, its a misleading function name since we aren't replacing anything yet
+    /* Visually remove leaderboard placements, and also the spinner symbol */
+    [...overallLeaderboardPlacementsContainer.children].forEach(child => {
+        if (child.classList.contains("leaderboard-place-panel") || child.classList.contains("fa-spinner")) {
+            child.remove();
+        }
+    });
     bottomPlacement = pageNum * 50; // What the bottom of the page will have
     topPlacement = bottomPlacement - 49; // What the top of the page will have
     for (let i = topPlacement; i <= bottomPlacement; i++) {
@@ -278,6 +290,8 @@ function visuallyDisplayPage(pageNum) {
         }
         
     }
+    // Update text
+    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`
 
 }
 
@@ -328,10 +342,9 @@ cycleLeftButton.addEventListener('click', () => {
     if (currentPage > 1) { // Make sure it's atleast greater than 1
         currentPage--;
         // Scroll back to top of page
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
     }
-    // Place this text before
-    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
+    // pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
     visuallyDisplayPage(currentPage);
 });
 
@@ -340,10 +353,10 @@ cycleRightButton.addEventListener('click', () => {
     if (currentPage < finalPage) {
         currentPage++;
         // Scroll back to top of page
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
     }
     visuallyDisplayPage(currentPage);
-    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
+    // pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
 });
 
 /* Select all left sliders for category weights and add event listeners to them */
@@ -373,6 +386,59 @@ rightSliders.forEach(slider => {
         updateCategoryWeight(CategoryID, 0.1); // Add 10%
     });
 });
+
+
+
+// Store the searchPlayer function in a variable to be re used
+function searchPlayer(event) {
+    /* Make sure we either triggered this event by pressing enter, OR just clicking
+     * the search button */
+    if ( (event.type === "keydown" && event.key === "Enter") || (event.type === "click") ) {
+        const playerNameToSearch = searchTextField.value;
+        console.log(`Searching for ${playerNameToSearch}`); // TODO: Add functionality for this
+        // Check if the usersAndPointsArray contains the name (ignore case sensitivity)
+        const indexOfPlayer = usersAndPointsArray.findIndex(obj => obj.name.toLowerCase() === playerNameToSearch.toLowerCase());
+        console.log(indexOfPlayer);
+        if (indexOfPlayer != -1) { // If it's not -1, then we found the player name
+            // Find the page that this would be on using the index
+            let pagePlayerIsOn = Math.ceil( (indexOfPlayer + 1) / 50);
+            currentPage = pagePlayerIsOn;
+            visuallyDisplayPage(pagePlayerIsOn);
+            /* Find visually where the player is on the screen, then smoothly scroll
+            * to it (also ignore case sensitivity for this */
+            let playerPlacementInHTML = [...document.querySelectorAll(".leaderboard-place-panel")]
+                .filter(e => e.textContent.toLowerCase().includes(`${playerNameToSearch.toLowerCase()}`));
+            if (playerPlacementInHTML.length > 0) {
+                console.log("found the placer placement in html");
+                playerPlacementInHTML[0].scrollIntoView({ behavior: "smooth", block: "center"});
+                playerPlacementInHTML[0].classList.add("highlight")
+                // After 500 milliseconds add the "fade" class to fade out the element
+                setTimeout( () => {
+                    playerPlacementInHTML[0].classList.add("fade");
+                }, 500);
+                // Remove classes after it's all over
+                setTimeout( () => {
+                    playerPlacementInHTML[0].classList.remove("highlight", "fade");
+                }, 1500);
+
+            }
+        } else { // Player was not found, so notify them that 
+            searchTextField.value = "";
+            searchTextField.placeholder = `Could not find player "${playerNameToSearch}"`;
+            // Make it so the text is not editable while we notify user
+            searchTextField.readOnly = true;
+            setTimeout( () => {
+                searchTextField.placeholder = "Search player name:";
+            }, 1000)
+            searchTextField.readOnly = false;
+        }
+    }
+};
+
+/* Assign functionionality of SearchPlayer to both the textfield and
+ * the button */
+searchTextField.addEventListener("keydown", searchPlayer)
+searchButton.addEventListener("click", searchPlayer);
 
 
 

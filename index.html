@@ -11,13 +11,19 @@
     <div class="title-panel">SM64 Overall Rank Leaderboard</div>
         <div class="nav-panel">
             <button class="nav-button lb-button"><span style="position: relative; top: 85px;">Leaderboard</span></button>
-            
             <button class="nav-button category-weights-button"><span style="position: relative; top: 85px;">Category Weights</span></button>
         </div>
         <div class="overall-leaderboard-container">
-            <!-- This is where leaderboard placements will be dynamically
-              -- added through javascript -->
-              <i class="fa-solid fa-spinner fa-spin"></i>
+            <div class="player-search-bar">
+                <input type="text" placeholder="Search player name:" class="search-text-field">
+                <button class="nav-button search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <div class="overall-leaderboard-placements-container">
+                <!-- Loading icon that will be removed once the GET requests are completed in javascript -->
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <!-- This is where leaderboard placements will be dynamically
+                  -- added through javascript -->
+            </div>
         </div>
         <div class="overall-lb-nav-panel">
             <!-- Font awesome icons used here -->
