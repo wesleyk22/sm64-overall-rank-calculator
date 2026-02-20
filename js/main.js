@@ -1,7 +1,12 @@
-/* I will be using the documentation from the speedrun.com API
- * to get data from the speedrun.com website, specifically data
- * from the SM64 leaderboards for 0, 1, 16, 70, and 120 star the
- * game ID for SM64 is o1y9wo6q */
+/* This code is the "main" flow of the program. This code includes global variables that are used, 
+ * and also the main arrays as well. This is like the "model" or the "data" of the application that will
+ * be accessed from the other files */
+
+/* The other files other than this will contain the html elements selected, event listeners for them, and functionality
+ * for seperate parts of this application and have been named accordingly */
+
+/* Almost all of these .js files including this one have console.log lines in them stating what 
+ * certain parts of the code are doing. these can be uncommented as needed for testing purposes */
 
 // unchanging ID for SM64 as a game
 const SM64_GAME_ID = "o1y9wo6q";
@@ -71,25 +76,9 @@ const numLBPlacements = 1000;
 let currentPage = 1;
 let finalPage = 0; // This will be calculated and set to a number after the usersAndPointsArray is completed 
 
-/* HTML elements that are selected and assigned to variables */
-const overallLeaderboardContainer = document.querySelector(".overall-leaderboard-container");
-const overallLeaderboardPlacementsContainer = document.querySelector(".overall-leaderboard-placements-container")
-const categoryWeightsContainer = document.querySelector(".category-weights-container");
-const overallLeaderboardButton = document.querySelector(".lb-button");
-const categoryWeightsButton = document.querySelector(".category-weights-button");
-const overallLeaderboardNavPanel = document.querySelector(".overall-lb-nav-panel")
-const cycleLeftButton = document.querySelector(".page-cycle-left");
-const cycleRightButton = document.querySelector(".page-cycle-right");
-const pageText = document.querySelector(".page-text");
-const searchTextField = document.querySelector(".search-text-field");
-const searchButton = document.querySelector(".search-button");
-
-/* Function to that returns the desired amount of 
- * leaderboard placements for a given category ID,
- * game ID, and platform ID. It will return an array
- * of sorted javascript objects that represent runs that
- * will have the name of the runner, time of the run, and 
- * if it was emulator or vc it's converted to the time of
+/* Function to that returns the desired amount of  leaderboard placements for a given category ID,
+ * game ID, and platform ID. It will return an array of sorted javascript objects that represent runs that
+ * will have the name of the runner, time of the run, and if it was emulator or vc it's converted to the time of
  * a console run and sorted */
 async function getLeaderboardPlacements(CategoryID, gameID) {
     try {
@@ -116,7 +105,7 @@ async function getLeaderboardPlacements(CategoryID, gameID) {
         const lbarray = [];
 
         // Get the length of the players/runs that we will loop through
-        console.log(data.data.runs.length);
+        // console.log(data.data.runs.length);
         const numRuns = data.data.runs.length;
 
         // Loop the runs, getting the name of the player and time of the run
@@ -175,48 +164,6 @@ async function getLeaderboardPlacements(CategoryID, gameID) {
     }
 }
 
-
-
-/* Using the variables for the 5 categories, sort the overall leaderboard (AKA
- * the usersAndPointsArray) based on the category weights */
-function displayOverallLeaderboard() {
-    // Make sure the data is retrieved, otherwise there's nothing to display
-    if (dataRetrieved == true) {
-        /* Clear the usersAndPoints array */
-        usersAndPointsArray.length = 0;
-        // commenting this out since I think it's repetitive
-        // /* (remove all placement panels) */
-        // [...overallLeaderboardContainer.children].forEach(child => {
-        //     if (child.classList.contains("leaderboard-place-panel")) {
-        //         child.remove();
-        //     }
-        // });
-        /* Loop through the 5 leaderboards that we got in the getFiveCategories()
-        * function, based on the category_weights object that is customizable
-        * by the user, creating a new overall leaderboard  */
-        loopThroughLeaderBoard(lb120, category_weights["wkpoo02r"]); // 120 
-        loopThroughLeaderBoard(lb70, category_weights["7dgrrxk4"]); // 70
-        loopThroughLeaderBoard(lb16, category_weights["n2y55mko"]); // 16
-        loopThroughLeaderBoard(lb1, category_weights["7kjpp4k3"]); // 1
-        loopThroughLeaderBoard(lb0, category_weights["xk9gg6d0"]); // 0
-
-        /* Sort the usersAndPointsArray by points before displaying it */
-        usersAndPointsArray.sort((a, b) => b.points - a.points);
-
-        /* Based on the size of the array, calculate the final page number
-        * and set that variable accordingly */
-        finalPage = Math.floor( usersAndPointsArray.length / 50 ); // The final page will be the length divided by 50 rounded down
-        console.log(`final page calculated to be ${finalPage}`);
-        pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
-
-        /* Display overall leaderboard based on their users and points */
-        console.log("users and their points:");
-        console.log(usersAndPointsArray);
-        // Start by displaying the first page
-        visuallyDisplayPage(currentPage);
-    }
-}
-
 /* Get 120/70/16/1/0 star leaderboard times, that includes N64, emu, and console, assigning them
 to the variables above */
 async function getFiveCategories() {
@@ -230,215 +177,17 @@ async function getFiveCategories() {
     dataRetrieved = true;
     /* After getting the five categories, that is when we can display the 
     overall leaderboard: */
-    displayOverallLeaderboard();
+    calculateOverallLeaderboard();
 }
+
 // Run the above function (TODO: just make it anonymous since we only need to run it once)
 getFiveCategories();
 
 
-/* Re-usable function to loop through a leaderboard, and assign points to the usersAndPointsArray */
-function loopThroughLeaderBoard(leaderboard, weight) {
-     /* Loop through the array, check if the user is already in the array,
-     * if the user is already in the array, then add points, if the user was not in 
-     * the array, then add a new user */
-    leaderboard.forEach((run, index) => {
-        // Calculate points (1000 for first place, 500 for second place, 333 for third place, etc...)
-        let calculatedPoints = (weight * ( 1000 * ( 1 / (index + 1) ) ) );
-        let playerName = run.name;
-
-        // Check if the user is already in the usersAndPoints array
-        const player = usersAndPointsArray.find(obj => obj.name === playerName);
-
-        if (player !== undefined) { // If true then we found the object with the matching player name
-            // console.log(`Found player named ${player.name} giving them ${calculatedPoints} points`);
-            player.points += calculatedPoints; // Give them points
-        } else { // otherwise, we need to create a new player object and award them with the points
-            const userObject = new Object({
-                name: run.name,
-                points: calculatedPoints
-            });
-            usersAndPointsArray.push(userObject);
-        }
-    });
-}
-
-/* Function to visually display an overall leaderboard placement in the DOM */
-function visuallyAddPlacement(placement, name, points) {
-    const placementDiv = document.createElement("div");
-    placementDiv.classList.add("leaderboard-place-panel");
-    placementDiv.textContent = `#${placement} - ${name} (${points.toFixed(2)})`;
-    overallLeaderboardPlacementsContainer.appendChild(placementDiv);
-}
-
-/* Function to display a "page" of the leaderboard. Each page will have 50
- * placements */
-function visuallyDisplayPage(pageNum) {
-    /* Visually remove leaderboard placements, and also the spinner symbol */
-    [...overallLeaderboardPlacementsContainer.children].forEach(child => {
-        if (child.classList.contains("leaderboard-place-panel") || child.classList.contains("fa-spinner")) {
-            child.remove();
-        }
-    });
-    bottomPlacement = pageNum * 50; // What the bottom of the page will have
-    topPlacement = bottomPlacement - 49; // What the top of the page will have
-    for (let i = topPlacement; i <= bottomPlacement; i++) {
-        if (usersAndPointsArray[i-1] !== undefined) { // Make sure its defined
-            visuallyAddPlacement(i, usersAndPointsArray[i-1].name, usersAndPointsArray[i-1].points);
-            isOnFinalPage = false;
-        } else { // Otherwise if it's not defined that means that this is the final placement and we are on the final page
-            isOnFinalPage = true;
-        }
-        
-    }
-    // Update text
-    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`
-
-}
-
-/* Function to both visually and programatically update the weights of
- * each category */
-function updateCategoryWeight(CategoryID, weightChange) {
-    /* Check if the category ID exists in the lookup table */
-    if (CategoryID in category_weights) {
-        console.log(`category id of ${CategoryID} found in array`);
-        /* Programatically update weight with weightChange */
-        console.log(`original category weight: ${category_weights[CategoryID]}`);
-        category_weights[CategoryID] += weightChange;
-        console.log(`new category weight: ${category_weights[CategoryID].value}`);
-        /* Visually update weight on the html */
-        // Find the slider by category ID
-        const categoryWeightSlider = document.querySelector(`[data-category-id="${CategoryID}"]`);
-        // Find the slider-text class that should be a child element of the category weight slider
-        const sliderText = categoryWeightSlider.querySelector(".slider-text");
-        // Calculate percentage
-        const percentAsInteger =  (category_weights[CategoryID] * 100);
-        // Update the text
-        sliderText.textContent = `${percentAsInteger.toFixed(0)}%`;
-    }
-}
-
-/* Functionality for the overall leaderboard button */
-overallLeaderboardButton.addEventListener('click', () => {
-    console.log("lb button clicked");
-    categoryWeightsContainer.classList.add("hidden");
-    overallLeaderboardNavPanel.classList.remove("hidden");
-    overallLeaderboardContainer.classList.remove("hidden");
-    // Display the overall leaderboard
-    displayOverallLeaderboard();
-});
-
-/* Functionality for the category weights button */
-categoryWeightsButton.addEventListener('click', () => {
-    console.log("category weights button clicked");
-        overallLeaderboardContainer.classList.add("hidden");
-        overallLeaderboardNavPanel.classList.add("hidden");
-        categoryWeightsContainer.classList.remove("hidden");    
-});
-
-/* Functionality for the left and right buttons found in the bottom
- * navigation panel for the overall leaderboard */
-cycleLeftButton.addEventListener('click', () => {
-    console.log("cycle left button clicked");
-    if (currentPage > 1) { // Make sure it's atleast greater than 1
-        currentPage--;
-        // Scroll back to top of page
-        // window.scrollTo(0, 0);
-    }
-    // pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
-    visuallyDisplayPage(currentPage);
-});
-
-cycleRightButton.addEventListener('click', () => {
-    console.log("cycle right button clicked");
-    if (currentPage < finalPage) {
-        currentPage++;
-        // Scroll back to top of page
-        // window.scrollTo(0, 0);
-    }
-    visuallyDisplayPage(currentPage);
-    // pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
-});
-
-/* Select all left sliders for category weights and add event listeners to them */
-const leftSliders = document.querySelectorAll(".slider-left-btn");
-
-leftSliders.forEach(slider => {
-    slider.addEventListener('click', () => {
-        console.log("left slider clicked");
-        /* Check the category id of the slider that we are clicking */
-        // let CategoryID = slider.parentElement.dataset.CategoryID;
-        let CategoryID = slider.parentElement.getAttribute('data-category-id');
-        console.log(`left slider with category id of ${CategoryID} clicked`);
-        updateCategoryWeight(CategoryID, -0.1); // Subtract 10%
-    });
-});
-
-/* Select all right sliders for category weights and add event listeners to them */
-const rightSliders = document.querySelectorAll(".slider-right-btn");
-
-rightSliders.forEach(slider => {
-    slider.addEventListener('click', () => {
-        console.log("right slider clicked");
-        /* Check the category id of the slider that we are clicking */
-        // let CategoryID = slider.parentElement.dataset.CategoryID;
-        let CategoryID = slider.parentElement.getAttribute('data-category-id');
-        console.log(`right slider with category id of ${CategoryID} clicked`);
-        updateCategoryWeight(CategoryID, 0.1); // Add 10%
-    });
-});
 
 
 
-// Store the searchPlayer function in a variable to be re used
-function searchPlayer(event) {
-    /* Make sure we either triggered this event by pressing enter, OR just clicking
-     * the search button */
-    if ( (event.type === "keydown" && event.key === "Enter") || (event.type === "click") ) {
-        const playerNameToSearch = searchTextField.value;
-        console.log(`Searching for ${playerNameToSearch}`); // TODO: Add functionality for this
-        // Check if the usersAndPointsArray contains the name (ignore case sensitivity)
-        const indexOfPlayer = usersAndPointsArray.findIndex(obj => obj.name.toLowerCase() === playerNameToSearch.toLowerCase());
-        console.log(indexOfPlayer);
-        if (indexOfPlayer != -1) { // If it's not -1, then we found the player name
-            // Find the page that this would be on using the index
-            let pagePlayerIsOn = Math.ceil( (indexOfPlayer + 1) / 50);
-            currentPage = pagePlayerIsOn;
-            visuallyDisplayPage(pagePlayerIsOn);
-            /* Find visually where the player is on the screen, then smoothly scroll
-            * to it (also ignore case sensitivity for this */
-            let playerPlacementInHTML = [...document.querySelectorAll(".leaderboard-place-panel")]
-                .filter(e => e.textContent.toLowerCase().includes(`${playerNameToSearch.toLowerCase()}`));
-            if (playerPlacementInHTML.length > 0) {
-                console.log("found the placer placement in html");
-                playerPlacementInHTML[0].scrollIntoView({ behavior: "smooth", block: "center"});
-                playerPlacementInHTML[0].classList.add("highlight")
-                // After 500 milliseconds add the "fade" class to fade out the element
-                setTimeout( () => {
-                    playerPlacementInHTML[0].classList.add("fade");
-                }, 500);
-                // Remove classes after it's all over
-                setTimeout( () => {
-                    playerPlacementInHTML[0].classList.remove("highlight", "fade");
-                }, 1500);
 
-            }
-        } else { // Player was not found, so notify them that 
-            searchTextField.value = "";
-            searchTextField.placeholder = `Could not find player "${playerNameToSearch}"`;
-            // Make it so the text is not editable while we notify user
-            searchTextField.readOnly = true;
-            setTimeout( () => {
-                searchTextField.placeholder = "Search player name:";
-            }, 1000)
-            searchTextField.readOnly = false;
-        }
-    }
-};
-
-/* Assign functionionality of SearchPlayer to both the textfield and
- * the button */
-searchTextField.addEventListener("keydown", searchPlayer)
-searchButton.addEventListener("click", searchPlayer);
 
 
 
