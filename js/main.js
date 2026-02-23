@@ -121,7 +121,40 @@ async function getLeaderboardPlacements(CategoryID, gameID) {
                 // console.log(data.data.players.data[i].name);
                 playerName = data.data.players.data[i].name;
             }
+
+            /* Get the players icon (checking if it's in "assets" key) */
+            let playerIcon = "";
+            if (data.data.players.data[i].assets !== undefined) { // Make sure it's not undefined
+                playerIcon = data.data.players.data[i].assets.image.uri;
+                /* Regex to turn the http in the string to an https */
+                if (playerIcon !== null) {
+                    playerIcon = playerIcon.replace(/^http:\/\//, "https://");
+                }
+                // console.log(`Found player icon ${playerIcon} for player ${playerName}`);
+            }
+
+            /* Get the players colors from the gradients (theres to colors, the fromColor, and the toColor) */
+
+            /* Array of colors that will be the value instead of using 4 different variables: */
             
+            let colorFromDark = "#000000"
+            let colorFromLight = "#000000";
+            if (data.data.players.data[i]["name-style"] !== undefined && data.data.players.data[i]["name-style"]["color-from"] !== undefined) {
+                colorFromDark = data.data.players.data[i]["name-style"]["color-from"].dark;
+                colorFromLight = data.data.players.data[i]["name-style"]["color-from"].light;
+            }
+
+            let colorToDark = "#000000"
+            let colorToLight = "#000000";
+            if (data.data.players.data[i]["name-style"] !== undefined && data.data.players.data[i]["name-style"]["color-from"] !== undefined) {
+                colorToDark = data.data.players.data[i]["name-style"]["color-to"].dark;
+                colorToLight = data.data.players.data[i]["name-style"]["color-to"].light;
+            }
+            
+            let playerColorsArray = [colorFromDark, colorFromLight, colorToDark, colorToLight];
+            // console.log(`Player ${[playerName]}'s colors:`)
+            // console.log(playerColorsArray);
+
             // Get the time and platform of the run of the run
             let runTime = data.data.runs[i].run.times.realtime_t;
             let platform = data.data.runs[i].run.system.platform;
@@ -144,6 +177,8 @@ async function getLeaderboardPlacements(CategoryID, gameID) {
              * details */
             const runObject = new Object({
                 name: playerName,
+                playerColors: playerColorsArray,
+                playerIcon: playerIcon,
                 time: runTime,
                 platform: platformInStringForm,
                 consoleEquivalentTime: consoleRunTime

@@ -57,6 +57,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+    height: 3.75rem;
 
 }
 
@@ -253,8 +254,42 @@ body {
 }
 
 .player-icon {
-    height: 2.5rem;
-    padding: 0.5rem;
-    background-color: white;
+    height: 3rem;
+    width: 3rem;
+    background-color: rgb(41, 41, 41);
     border: 0.2rem solid black;
+    object-fit: cover;
 }
+
+.player-rank {
+    width: 70px;
+    text-align: center;
+    flex: 0 0 auto;  /* Makes it so the width will be fixed, still horizontally centered though */
+}
+
+.player-name {
+    width: 205px;
+    text-align: left;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0 black;
+    flex: 0 0 auto; /* Makes it so the width will be fixed, still horizontally centered though */
+}
+
+.player-points {
+    width: 200px;
+    flex: 0 0 auto; /* Makes it so the width will be fixed, still horizontally centered though */
+    text-align: right;
+}
+
+/* Styling for the top three ranks */
+.rank-one {
+    color: gold;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-shadow: 
+     0 0 4px #ffcc4d,
+     0 0 8px #ffcc4d,
+     0 0 12px #ffb300,
+     0 0 16px #ffb300;
+}
+

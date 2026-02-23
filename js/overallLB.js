@@ -32,8 +32,8 @@ function calculateOverallLeaderboard() {
         // console.log(`final page calculated to be ${finalPage}`);
 
         /* Display overall leaderboard based on their users and points */
-        // console.log("users and their points:");
-        // console.log(usersAndPointsArray);
+        console.log("users and their points:");
+        console.log(usersAndPointsArray);
         // Start by displaying the first page
         visuallyDisplayPage(currentPage);
     }
@@ -48,6 +48,8 @@ function loopThroughLeaderBoard(leaderboard, weight) {
         // Calculate points (1000 for first place, 500 for second place, 333 for third place, etc...)
         let calculatedPoints = (weight * ( 1000 * ( 1 / (index + 1) ) ) );
         let playerName = run.name;
+        let playerIcon = run.playerIcon;
+        let playerColors = run.playerColors;
 
         // Check if the user is already in the usersAndPoints array
         const player = usersAndPointsArray.find(obj => obj.name === playerName);
@@ -58,7 +60,9 @@ function loopThroughLeaderBoard(leaderboard, weight) {
         } else { // otherwise, we need to create a new player object and award them with the points
             const userObject = new Object({
                 name: run.name,
-                points: calculatedPoints
+                icon: playerIcon,
+                points: calculatedPoints,
+                colors: playerColors
             });
             usersAndPointsArray.push(userObject);
         }
@@ -76,18 +80,42 @@ overallLeaderboardButton.addEventListener('click', () => {
 });
 
 /* Function to visually display an overall leaderboard placement in the DOM */
-function visuallyAddPlacement(placement, name, points) {
+function visuallyAddPlacement(placement, name, points, icon, playerColors) {
     const placementDiv = document.createElement("div");
     placementDiv.classList.add("leaderboard-place-panel");
     overallLeaderboardPlacementsContainer.appendChild(placementDiv);
-    // placementDiv.textContent = `#${placement} - ${name} (${points.toFixed(2)})`;
-    const textElement = document.createElement("span");
-    textElement.textContent = `#${placement} - ${name} (${points.toFixed(2)})`
-    placementDiv.appendChild(textElement);
-    /* TODO: implement player icons */
-    // const playerIcon = document.createElement("img");
-    // playerIcon.classList.add("player-icon");
-    // playerIcon.src = "https://www.speedrun.com/static/user/jn32931x/icon?v=a137a7b";
-    // placementDiv.appendChild(playerIcon);
+    /* Placement Number Element */
+    const numberPlacementText = document.createElement("span");
+    numberPlacementText.textContent = `#${placement}`
+    numberPlacementText.classList.add("player-rank");
+    // /* Check if it's rank 1, 2, or 3, if it is add styling */
+    if (placement == 1) {
+        numberPlacementText.classList.add("rank-one");
+    }
+    placementDiv.appendChild(numberPlacementText);
+    /* Player Icon*/
+    if (icon != null && icon !== "") {
+        const playerIcon = document.createElement("img");
+        playerIcon.classList.add("player-icon");
+        playerIcon.src = `${icon}`;
+        placementDiv.appendChild(playerIcon);
+    } else {
+        const playerIcon = document.createElement("img");
+        playerIcon.classList.add("player-icon");
+        playerIcon.src = "images/user.png";
+        playerIcon.style.backgroundColor = playerColors[0];
+        placementDiv.appendChild(playerIcon);
+    }
+    /* Name element */
+    const nameElement = document.createElement("span");
+    nameElement.textContent = `${name}`
+    nameElement.style.color = playerColors[0];
+    nameElement.classList.add("player-name");
+    placementDiv.appendChild(nameElement);
+    /* Points element */
+    const pointsElement = document.createElement("span");
+    pointsElement.textContent = `(${points.toFixed(2)})`
+    pointsElement.classList.add("player-points");
+    placementDiv.appendChild(pointsElement);
 }
 

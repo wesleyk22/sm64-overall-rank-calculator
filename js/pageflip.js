@@ -8,6 +8,7 @@ const pageText = document.querySelector(".page-text");
 /* Function to display a "page" of the leaderboard. Each page will have 50
  * placements */
 function visuallyDisplayPage(pageNum) {
+    overallLeaderboardPlacementsContainer.scrollTo({top: 0});
     /* Visually remove leaderboard placements, and also the spinner symbol */
     [...overallLeaderboardPlacementsContainer.children].forEach(child => {
         if (child.classList.contains("leaderboard-place-panel") || child.classList.contains("fa-spinner")) {
@@ -18,7 +19,8 @@ function visuallyDisplayPage(pageNum) {
     topPlacement = bottomPlacement - 49; // What the top of the page will have
     for (let i = topPlacement; i <= bottomPlacement; i++) {
         if (usersAndPointsArray[i-1] !== undefined) { // Make sure its defined
-            visuallyAddPlacement(i, usersAndPointsArray[i-1].name, usersAndPointsArray[i-1].points);
+            visuallyAddPlacement(i, usersAndPointsArray[i-1].name, usersAndPointsArray[i-1].points, usersAndPointsArray[i-1].icon, usersAndPointsArray[i-1].colors);
+            console.log(`visually adding player ${usersAndPointsArray[i-1].name} with colors ${usersAndPointsArray[i-1].playerColors}`);
             isOnFinalPage = false;
         } else { // Otherwise if it's not defined that means that this is the final placement and we are on the final page
             isOnFinalPage = true;
@@ -27,6 +29,7 @@ function visuallyDisplayPage(pageNum) {
     }
     // Update text
     pageText.innerHTML = `Page ${currentPage} of ${finalPage}`
+    setTimeout
 }
 
 /* Functionality for the left and right buttons found in the bottom
@@ -37,6 +40,7 @@ cycleLeftButton.addEventListener('click', () => {
         currentPage--;
     }
     visuallyDisplayPage(currentPage);
+    
 });
 
 cycleRightButton.addEventListener('click', () => {
@@ -45,4 +49,5 @@ cycleRightButton.addEventListener('click', () => {
         currentPage++;
     }
     visuallyDisplayPage(currentPage);
+    
 });
