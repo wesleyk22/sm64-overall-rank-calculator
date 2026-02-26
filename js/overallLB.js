@@ -17,11 +17,11 @@ function calculateOverallLeaderboard() {
         /* Loop through the 5 leaderboards that we got in the getFiveCategories()
         * function, based on the category_weights object that is customizable
         * by the user, creating a new overall leaderboard  */
-        loopThroughLeaderBoard(lb120, category_weights["wkpoo02r"]); // 120 
-        loopThroughLeaderBoard(lb70, category_weights["7dgrrxk4"]); // 70
-        loopThroughLeaderBoard(lb16, category_weights["n2y55mko"]); // 16
-        loopThroughLeaderBoard(lb1, category_weights["7kjpp4k3"]); // 1
-        loopThroughLeaderBoard(lb0, category_weights["xk9gg6d0"]); // 0
+        loopThroughLeaderBoard(lb120, CATEGORY_120_STAR_ID); // 120 
+        loopThroughLeaderBoard(lb70, CATEGORY_70_STAR_ID); // 70
+        loopThroughLeaderBoard(lb16, CATEGORY_16_STAR_ID); // 16
+        loopThroughLeaderBoard(lb1, CATEGORY_1_STAR_ID); // 1
+        loopThroughLeaderBoard(lb0, CATEGORY_0_STAR_ID); // 0
 
         /* Sort the usersAndPointsArray by points before displaying it */
         usersAndPointsArray.sort((a, b) => b.points - a.points);
@@ -40,7 +40,10 @@ function calculateOverallLeaderboard() {
 }
 
 /* Re-usable function to loop through a leaderboard, and assign points to the usersAndPointsArray */
-function loopThroughLeaderBoard(leaderboard, weight) {
+function loopThroughLeaderBoard(leaderboard, categoryID) {
+
+    /* Calculate weight based on category ID */
+    let weight = category_weights[categoryID];
      /* Loop through the array, check if the user is already in the array,
      * if the user is already in the array, then add points, if the user was not in 
      * the array, then add a new user */
@@ -57,17 +60,45 @@ function loopThroughLeaderBoard(leaderboard, weight) {
         if (player !== undefined) { // If true then we found the object with the matching player name
             // console.log(`Found player named ${player.name} giving them ${calculatedPoints} points`);
             player.points += calculatedPoints; // Give them points
+            updatePlayerRank(player, categoryID, (index+1));
         } else { // otherwise, we need to create a new player object and award them with the points
             const userObject = new Object({
                 name: run.name,
                 icon: playerIcon,
                 points: calculatedPoints,
-                colors: playerColors
+                colors: playerColors,
+                ranks: {
+                    "120": -1,
+                    "70": -1,
+                    "16": -1,
+                    "1": -1,
+                    "0": -1,
+                }
+            
             });
+            updatePlayerRank(userObject, categoryID, (index+1));
             usersAndPointsArray.push(userObject);
         }
     });
 }
+
+/* Helper function to update the "rank" attribute in a user object
+ * in the usersAndPointsArray */
+function updatePlayerRank(userObject, categoryID, rank) {
+    /* Update the "ranks" attribute of the userObject */
+    if (categoryID == CATEGORY_120_STAR_ID) {
+        userObject.ranks["120"] = rank;
+    } else if (categoryID == CATEGORY_70_STAR_ID) {
+        userObject.ranks["70"] = rank;
+    } else if (categoryID == CATEGORY_16_STAR_ID) {
+        userObject.ranks["16"] = rank;
+    } else if (categoryID == CATEGORY_1_STAR_ID) {
+        userObject.ranks["1"] = rank;
+    } else if (categoryID == CATEGORY_0_STAR_ID) {
+        userObject.ranks["0"] = rank;
+    }
+}
+
 
 /* Functionality for the overall leaderboard button */
 overallLeaderboardButton.addEventListener('click', () => {
@@ -80,7 +111,7 @@ overallLeaderboardButton.addEventListener('click', () => {
 });
 
 /* Function to visually display an overall leaderboard placement in the DOM */
-function visuallyAddPlacement(placement, name, points, icon, playerColors) {
+function visuallyAddPlacement(placement, name, points, icon, playerColors, ranks) {
     const placementDiv = document.createElement("div");
     placementDiv.classList.add("leaderboard-place-panel");
     overallLeaderboardPlacementsContainer.appendChild(placementDiv);
@@ -91,6 +122,10 @@ function visuallyAddPlacement(placement, name, points, icon, playerColors) {
     // /* Check if it's rank 1, 2, or 3, if it is add styling */
     if (placement == 1) {
         numberPlacementText.classList.add("rank-one");
+    } else if (placement == 2) {
+        numberPlacementText.classList.add("rank-two");
+    } else if (placement == 3) {
+        numberPlacementText.classList.add("rank-three");
     }
     placementDiv.appendChild(numberPlacementText);
     /* Player Icon*/
@@ -112,10 +147,34 @@ function visuallyAddPlacement(placement, name, points, icon, playerColors) {
     nameElement.style.color = playerColors[0];
     nameElement.classList.add("player-name");
     placementDiv.appendChild(nameElement);
-    /* Points element */
-    const pointsElement = document.createElement("span");
-    pointsElement.textContent = `(${points.toFixed(2)})`
-    pointsElement.classList.add("player-points");
-    placementDiv.appendChild(pointsElement);
+    shrinkToFit(nameElement);
+    /* Ranks for 120, 70, 16, 1, and 0 */
+    const categories = ["120", "70", "16", "1", "0"];
+    categories.forEach( (category, index, categories) => {
+        const rank = categories[index];
+        const rankElement = document.createElement("span");
+        if (ranks[category] != -1) {
+            rankElement.textContent = `${category}: #${ranks[category]}`;
+        } else { // Otherwise, that means they don't have a time in this category
+            rankElement.textContent = "-"
+        }
+        rankElement.classList.add("rank-element");
+        placementDiv.appendChild(rankElement);
+        shrinkToFit(rankElement);
+    })
+
 }
 
+/* TODO: function to add styling to a span based if its #1, #2, #3 etc. */
+function styleRank(HTMLElement) {
+    
+}
+
+/* Function to shrink an element's font size so that it fits, this will be used on a lot
+ * of the <span> elements in the placement panel */
+function shrinkToFit(element) {
+    if (element.scrollWidth > element.clientWidth) { /* Check if the text is overflowing the container, if it is we'll just reduce the font size a bit */
+        element.style.fontSize = "1rem";
+    }
+}
+    

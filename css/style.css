@@ -44,6 +44,22 @@ body {
     border: 1rem outset #474d45;
 }
 
+.overall-lb-column-headers {
+    font-size: 1.5rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.overall-lb-column-headers span {
+   border-left: 2px solid black;
+   border-right: 2px solid black;
+   padding-left: 0.25rem;
+   padding-right: 0.25rem;
+   text-align: center;
+}
+
 /* This is the styling for each leaderboard rank"
  * on the list */
 .leaderboard-place-panel {
@@ -56,7 +72,7 @@ body {
     text-align: left;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     height: 3.75rem;
 
 }
@@ -256,6 +272,8 @@ body {
 .player-icon {
     height: 3rem;
     width: 3rem;
+    flex: 0 0 auto; /* Makes it so the width will be fixed, still horizontally centered though */
+    /* object-fit: fill; */
     background-color: rgb(41, 41, 41);
     border: 0.2rem solid black;
     object-fit: cover;
@@ -268,11 +286,17 @@ body {
 }
 
 .player-name {
-    width: 205px;
-    text-align: left;
+    width: 145px;
+    text-align: center;
     font-weight: bold;
     text-shadow: 0.5px 0.5px 0 black;
     flex: 0 0 auto; /* Makes it so the width will be fixed, still horizontally centered though */
+}
+
+
+.player-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .player-points {
@@ -291,5 +315,41 @@ body {
      0 0 8px #ffcc4d,
      0 0 12px #ffb300,
      0 0 16px #ffb300;
+     
 }
 
+.rank-two {
+    color: silver;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-shadow: 
+     0 0 4px silver,
+     0 0 8px silver,
+     0 0 12px silver,
+     0 0 16px silver;
+     
+}
+
+.rank-three {
+    color: #C9AE5D;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-shadow: 
+     0 0 4px #C9AE5D,
+     0 0 8px #C9AE5D,
+     0 0 12px #C9AE5D,
+     0 0 16px #C9AE5D;
+     
+}
+
+.rank-element {
+    width: 3rem;
+    text-align: center;
+}
+
+/* Styling for the accreditation at bottom of page */
+.credits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

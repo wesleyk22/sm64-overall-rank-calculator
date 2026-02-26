@@ -181,7 +181,7 @@ async function getLeaderboardPlacements(CategoryID, gameID) {
                 playerIcon: playerIcon,
                 time: runTime,
                 platform: platformInStringForm,
-                consoleEquivalentTime: consoleRunTime
+                consoleEquivalentTime: consoleRunTime,
             });
             lbarray.push(runObject);
 
