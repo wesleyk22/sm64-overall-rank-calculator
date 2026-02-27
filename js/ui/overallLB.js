@@ -39,67 +39,6 @@ function calculateOverallLeaderboard() {
     }
 }
 
-/* Re-usable function to loop through a leaderboard, and assign points to the usersAndPointsArray */
-function loopThroughLeaderBoard(leaderboard, categoryID) {
-
-    /* Calculate weight based on category ID */
-    let weight = category_weights[categoryID];
-     /* Loop through the array, check if the user is already in the array,
-     * if the user is already in the array, then add points, if the user was not in 
-     * the array, then add a new user */
-    leaderboard.forEach((run, index) => {
-        // Calculate points (1000 for first place, 500 for second place, 333 for third place, etc...)
-        let calculatedPoints = (weight * ( 1000 * ( 1 / (index + 1) ) ) );
-        let playerName = run.name;
-        let playerIcon = run.playerIcon;
-        let playerColors = run.playerColors;
-
-        // Check if the user is already in the usersAndPoints array
-        const player = usersAndPointsArray.find(obj => obj.name === playerName);
-
-        if (player !== undefined) { // If true then we found the object with the matching player name
-            // console.log(`Found player named ${player.name} giving them ${calculatedPoints} points`);
-            player.points += calculatedPoints; // Give them points
-            updatePlayerRank(player, categoryID, (index+1));
-        } else { // otherwise, we need to create a new player object and award them with the points
-            const userObject = new Object({
-                name: run.name,
-                icon: playerIcon,
-                points: calculatedPoints,
-                colors: playerColors,
-                ranks: {
-                    "120": -1,
-                    "70": -1,
-                    "16": -1,
-                    "1": -1,
-                    "0": -1,
-                }
-            
-            });
-            updatePlayerRank(userObject, categoryID, (index+1));
-            usersAndPointsArray.push(userObject);
-        }
-    });
-}
-
-/* Helper function to update the "rank" attribute in a user object
- * in the usersAndPointsArray */
-function updatePlayerRank(userObject, categoryID, rank) {
-    /* Update the "ranks" attribute of the userObject */
-    if (categoryID == CATEGORY_120_STAR_ID) {
-        userObject.ranks["120"] = rank;
-    } else if (categoryID == CATEGORY_70_STAR_ID) {
-        userObject.ranks["70"] = rank;
-    } else if (categoryID == CATEGORY_16_STAR_ID) {
-        userObject.ranks["16"] = rank;
-    } else if (categoryID == CATEGORY_1_STAR_ID) {
-        userObject.ranks["1"] = rank;
-    } else if (categoryID == CATEGORY_0_STAR_ID) {
-        userObject.ranks["0"] = rank;
-    }
-}
-
-
 /* Functionality for the overall leaderboard button */
 overallLeaderboardButton.addEventListener('click', () => {
     // console.log("lb button clicked");
