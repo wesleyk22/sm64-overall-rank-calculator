@@ -1,0 +1,60 @@
+/* Styling for things found specifically on category weights section 
+ * of the page */
+ 
+/* Container for the category weights, this is the parent element of all the others things
+ * found in this style sheet */
+.category-weights-container {
+    background-color: none;
+    width: 75%;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* Styling for the bottom navigation buttons for the overall leaderboard */
+.page-cycle-left, 
+.page-cycle-right,
+.slider-left-btn,
+.slider-right-btn {
+    background-color: var(--panel-color);
+    color: black;
+    font-size: 3rem;
+    /* border-left-color: #474d45;
+    border-right-color: #a0ad9d; */
+    border: 1rem outset #a0ad9d;
+}
+
+/* make the button visually "press down" when it's clicked */
+.slider-left-btn:active,
+.slider-right-btn:active {
+    transform:translateY(2px);
+}
+
+/* Styling for the category weight sliders */
+.category-weight-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+}
+
+.category-weight-slider span {
+    width: 300px;
+}
+
+/* Styling for the slider buttons */
+.slider-left-btn, 
+.slider-right-btn {
+    padding: 1rem;
+    margin: 0.5rem;
+    border-width: 1rem;
+}
+
+.slider-left-btn:hover,
+.slider-right-btn:hover {
+    cursor: pointer;
+    opacity: 0.85;
+}

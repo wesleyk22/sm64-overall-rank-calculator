@@ -1,0 +1,56 @@
+/* This file will contain all of the styling that is specifically for 
+ * the search bar and it's button */
+
+/* Styling for the player search bar */
+.player-search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.player-search-bar input {
+    font-size: 2rem;
+    font-family: cursive;
+    /* border-style: inset;
+    border-top-color: #705713;
+    border-right-color: #49390d;
+    border-bottom-color: #b18a1f;
+    border-left-color: #ffcb3c; */
+    border: 1rem inset #a9841d;
+    background-color: var(--yellow-menu-color);
+    width: 75%;
+}
+
+/* Color for the placeholder text */
+.player-search-bar input::placeholder {
+    color: #49390d;
+}
+
+
+/* Styling for when the player search bar is clicked on or "focused" */
+.player-search-bar input:focus {
+    outline: none;
+}
+
+.player-search-bar button {
+    font-size: 2rem;
+    font-family: cursive;
+    color: black;
+    background-color: var(--panel-color);
+    /* border-left-color: #474d45;
+    border-right-color: #a0ad9d; */
+    border: 1rem outset #a0ad9d;
+    /* width: 100px; */
+}
+
+.highlight {
+   background: var(--mario-yellow);
+   /* Add this transition so that when the background property DOES change
+    * which will happen through javascript, that it happens smoothly */
+   transition: background 1s ease; 
+}
+
+.highlight.fade {
+    background: var(--panel-color);;
+}

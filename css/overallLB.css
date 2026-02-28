@@ -1,0 +1,142 @@
+/* This file will contain all of the styling that is found in the overall
+ * leaderboard specifically */
+
+
+/* Container for EVERYTHING in the overall leaderboard including the page buttons at the bottom */
+.overall-leaderboard-container {
+    width: 75%;
+    max-width: 700px;
+    margin: 0 auto;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* Styling for the actually leaderboard placements container that's 
+ * scrollable and placements are added to it */
+.overall-leaderboard-placements-container {
+    /* Make it scrollable */
+    height: 600px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    /* Firefox styling for the scrollbar */
+    scrollbar-color: #49390d var(--yellow-menu-color);
+    /* Styling to make it "inset" like the search bar is */
+    border: 1rem inset #a9841d;
+    margin-top: 1rem;
+}
+
+/* Panel that includes the functionality for page flip found under the
+ * placements container */
+.overall-lb-nav-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 3.5rem;
+    font-size: 2rem;
+}
+
+/* styling for the spinner, this will be in the placements container
+ * until the data is fetched and loaded */
+.fa-spinner {
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mario-white);
+}
+
+/* Below is the styling for the individual player rank panels */
+
+/* Styling for each placement panel, all of the elements styled below are
+ * put into this panel */
+.leaderboard-place-panel {
+    background-color: var(--panel-color);
+    border-style: outset;
+    border-width: 1rem;
+    border-color: #a0ad9d;
+    font-size: 1.5rem;
+    padding: 0.25rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3.75rem;
+}
+
+/* Player's rank */
+.player-rank {
+    width: 70px;
+    text-align: center;
+    flex: 0 0 auto;  /* Makes it so the width will be fixed, still horizontally centered though */
+}
+
+/* Player's icon */
+.player-icon {
+    height: 3rem;
+    width: 3rem;
+    flex: 0 0 auto; /* Makes it so the width will be fixed, still horizontally centered though */
+    /* object-fit: fill; */
+    background-color: rgb(41, 41, 41);
+    border: 0.2rem solid black;
+    object-fit: cover;
+}
+
+.player-name {
+    width: 145px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0 black;
+    flex: 0 0 auto; /* Makes it so the width will be fixed, still horizontally centered though */
+}
+
+.player-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Styling for the top three ranks */
+.rank-one {
+    color: gold;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-shadow: 
+     0 0 4px #ffcc4d,
+     0 0 8px #ffcc4d,
+     0 0 12px #ffb300,
+     0 0 16px #ffb300;
+     
+}
+
+.rank-two {
+    color: silver;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-shadow: 
+     0 0 4px silver,
+     0 0 8px silver,
+     0 0 12px silver,
+     0 0 16px silver;
+     
+}
+
+.rank-three {
+    color: #C9AE5D;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-shadow: 
+     0 0 4px #C9AE5D,
+     0 0 8px #C9AE5D,
+     0 0 12px #C9AE5D,
+     0 0 16px #C9AE5D;
+     
+}
+
+.rank-element {
+    width: 3rem;
+    text-align: center;
+}

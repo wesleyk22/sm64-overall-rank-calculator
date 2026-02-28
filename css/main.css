@@ -1,0 +1,45 @@
+
+/* Colors that match the super mario 64 theme */
+:root {
+    --mario-red: #E52521;
+    --mario-blue: #3B5BA7; 
+    --mario-yellow: #F7D51D; 
+    --mario-green: #2d6b2f; 
+    --mario-brown: #8B5A2B; 
+    --mario-white: #FFFFFF;
+    --panel-color: #737C71;
+    --yellow-menu-color: #947419; /* <- use this with a gradient to recreate a similar background as the SM64 menu screen */
+}
+
+html {
+    font-family: cursive;
+}
+
+
+body {
+    background-color: var(--yellow-menu-color);
+    border: 2rem inset #a9841d;
+    padding: 2rem;
+    /* border-top-color: #705713;
+    border-right-color: #49390d;
+    border-bottom-color: #b18a1f;
+    border-left-color: #ffcb3c; */
+    margin: 2rem;
+}
+
+.normal-panel {
+    background-color: var(--panel-color);
+    border: 1rem outset #474d45;
+}
+
+/* Class for "hiding" an element (used by js file) */
+.hidden {
+    display: none;
+}
+
+/* Styling for the accreditation at bottom of page */
+.credits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
