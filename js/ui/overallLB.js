@@ -84,6 +84,11 @@ function visuallyAddPlacement(placement, name, points, icon, playerColors, ranks
     const nameElement = document.createElement("span");
     nameElement.textContent = `${name}`
     nameElement.style.color = playerColors[0];
+    /* Check if the player color is #000000, if it is, 
+     * then remove the text-shadow styling */
+    if (playerColors[0] == "#000000") {
+        nameElement.style.textShadow = "none";
+    }
     nameElement.classList.add("player-name");
     placementDiv.appendChild(nameElement);
     shrinkToFit(nameElement);

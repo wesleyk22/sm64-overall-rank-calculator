@@ -162,6 +162,11 @@ body {
     opacity: 0.85;
 }
 
+/* make the button visually "press down" when it's clicked */
+.nav-button:active {
+    transform:translateY(2px);
+}
+
 /* Styling for the bottom navigation buttons for the overall leaderboard */
 .page-cycle-left, 
 .page-cycle-right,
@@ -174,6 +179,13 @@ body {
     border-right-color: #a0ad9d; */
     border: 1rem outset #a0ad9d;
 }
+
+/* make the button visually "press down" when it's clicked */
+.slider-left-btn:active,
+.slider-right-btn:active {
+    transform:translateY(2px);
+}
+
 
 /* Class for "hiding" an element (used by js file) */
 .hidden {
