@@ -106,19 +106,13 @@ function visuallyAddPlacement(placement, name, points, icon, playerColors, ranks
         placementDiv.appendChild(rankElement);
         shrinkToFit(rankElement);
     })
-
+    /* Add an event listener to the name element that will open the players modal */
+    nameElement.addEventListener('click', () => {
+        /* This function takes the parameter of just the placement div itself,
+         * so that it can just clone all of the elements inside of it */
+        openPlayerModal(placementDiv, placement, ranks);
+    });
 }
 
-/* TODO: function to add styling to a span based if its #1, #2, #3 etc. */
-function styleRank(HTMLElement) {
-    
-}
 
-/* Function to shrink an element's font size so that it fits, this will be used on a lot
- * of the <span> elements in the placement panel */
-function shrinkToFit(element) {
-    if (element.scrollWidth > element.clientWidth) { /* Check if the text is overflowing the container, if it is we'll just reduce the font size a bit */
-        element.style.fontSize = "1rem";
-    }
-}
     

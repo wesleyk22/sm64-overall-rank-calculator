@@ -29,12 +29,12 @@ body {
 
 .normal-panel {
     background-color: var(--panel-color);
-    border: 1rem outset #474d45;
+    border: 1rem outset #a0ad9d;
 }
 
 /* Class for "hiding" an element (used by js file) */
 .hidden {
-    display: none;
+    display: none !important;  /* Make sure this doesn't get overridden */
 }
 
 /* Styling for the accreditation at bottom of page */

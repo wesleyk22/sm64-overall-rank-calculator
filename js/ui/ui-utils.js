@@ -1,0 +1,33 @@
+/* Re-usable functions for UI in the page */
+
+/* TODO: function to add styling to a span based if its #1, #2, #3 etc. */
+function styleRank(HTMLElement) {
+    
+}
+
+/* Function to shrink an element's font size so that it fits, this will be used on a lot
+ * of the <span> elements in the placement panel */
+function shrinkToFit(element) {
+    if (element.scrollWidth > element.clientWidth) { /* Check if the text is overflowing the container, if it is we'll just reduce the font size a bit */
+        element.style.fontSize = "1rem";
+    }
+}
+
+/* Function to format a time that is in the form of just a number value
+ * into a string "time" in 00h 00m 00s */
+function formatTime(totalSeconds) {
+    const hours = Math.floor((totalSeconds) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+
+    /* TODO: maybe add milliseconds */
+
+    /* The speedrun.com website rounds these to the third decimal place, 
+     * so I'll just do the same here */
+    if (hours == 0) {
+        return `${minutes}m ${seconds}s`;
+    } else {
+        return `${hours}h ${minutes}m ${seconds}s`;
+    }
+    
+}

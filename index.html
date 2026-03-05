@@ -10,9 +10,10 @@
     <!-- top of page styling -->
     <link rel="stylesheet" href="css/header.css">
     <!-- specific styling  -->
-     <link rel="stylesheet" href="css/overallLB.css">
-     <link rel="stylesheet" href="css/searchplayer.css">
-     <link rel="stylesheet" href="css/categoryweights.css">
+    <link rel="stylesheet" href="css/overallLB.css">
+    <link rel="stylesheet" href="css/searchplayer.css">
+    <link rel="stylesheet" href="css/categoryweights.css">
+    <link rel="stylesheet" href="css/playermodal.css">
 </head>
 <body>
     <div class="title-panel">SM64 Overall Rank Leaderboard</div>
@@ -79,6 +80,19 @@
     <div class="credits">
         <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Freepik - Flaticon</a>
     </div>
+    <!-- modal that will appear when you click on a players name -->
+    <div class="modal-background hidden">
+        <div class="player-modal normal-panel">
+            <button class="modal-exit-button">X</button>
+            <div class="modal-title">
+                <!-- Elements will be cloned into here -->
+            </div>
+            <div class="total-points">Total Points: 5000</div>
+            <div class="player-times-and-points">
+                <!-- Elements will be cloned into here -->
+            </div>
+        </div>
+    </div>
     <!-- helpers -->
     <script src="js/helpers/state.js"></script>
     <!-- ui -->
@@ -86,6 +100,8 @@
     <script src="js/ui/overallLB.js"></script>
     <script src="js/ui/pageflip.js"></script>
     <script src="js/ui/searchplayer.js"></script>
+    <script src="js/ui/playermodal.js"></script>
+    <script src="js/ui/ui-utils.js"></script>
     <!-- utils -->
     <script src="js/utils/fetch.js"></script>
     <!-- main -->

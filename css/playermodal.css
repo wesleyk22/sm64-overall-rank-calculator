@@ -1,0 +1,62 @@
+/* Styling for the player modal */
+
+/* Background for the modal */
+.modal-background {
+    position: fixed;
+    background: rgba(0,0,0, 0.45);
+    inset: 0;
+}
+
+/* The modal itself */
+.player-modal {
+    height: 700px;
+    width: 60%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-size: 1.75rem;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Styling for the "modal title", this will be extremely similar
+ * to the .leaderboard-place-panel styling */
+.modal-title {
+    padding: 0.25rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 6.5rem;
+    justify-content: center;
+}
+
+.player-times-and-points div {
+    margin-top: 1rem;
+}
+
+/* TODO: This styling is similar many others buttons in this app
+ * could avoid repetition by fixing this */
+
+/* Exit button that closes the modal */
+.modal-exit-button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+
+    background-color: var(--panel-color);
+    color: black;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 0.5rem outset #a0ad9d;
+    width: 50px;
+    height: 50px;
+}
+
+.modal-exit-button:hover {
+    cursor: pointer;
+    opacity: 0.85;
+}

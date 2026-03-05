@@ -48,7 +48,8 @@ const wiivc_offsets = {
 /* Arrays for the 5 categories, these will be accessed and re-used throughout the code and
  * be assigned values in the getFiveCategories() function and then constantly
  * be re-used to by the loopThroughLeaderBoard() function to create the overallLeaderboard
- *  which is usersAndPointsARray */
+ *  which is usersAndPointsArray.
+ * These arrays can simply be thought as the "combined" leaderboards */
 let lb120 = [];
 let lb70 = [];
 let lb16 = [];
