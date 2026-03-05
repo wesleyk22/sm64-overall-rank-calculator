@@ -37,18 +37,22 @@ function visuallyDisplayPage(pageNum) {
  * navigation panel for the overall leaderboard */
 cycleLeftButton.addEventListener('click', () => {
     // console.log("cycle left button clicked");
-    if (currentPage > 1) { // Make sure it's atleast greater than 1
-        currentPage--;
+    /* Only allow functionality for this if the data was retrieved */
+    if (dataRetrieved == true) {    
+        if (currentPage > 1) { // Make sure it's atleast greater than 1
+            currentPage--;
+        }
+        visuallyDisplayPage(currentPage);
     }
-    visuallyDisplayPage(currentPage);
-    
 });
 
 cycleRightButton.addEventListener('click', () => {
     // console.log("cycle right button clicked");
-    if (currentPage < finalPage) {
-        currentPage++;
+    /* Only allow functionality for this if the data was retrieved */
+    if (dataRetrieved == true) {  
+        if (currentPage < finalPage ) {
+            currentPage++;
+        }
+        visuallyDisplayPage(currentPage);
     }
-    visuallyDisplayPage(currentPage);
-    
 });
