@@ -12,6 +12,7 @@ const playerTimesAndPoints = document.querySelector(".player-times-and-points");
 function openPlayerModal(placementDiv, placement, ranks) {
     /* Make it visually appear */
     playerModalBackground.classList.remove("hidden");
+    playerModal.classList.remove("hidden");
 
     /* Remove any elements in the modal title before adding any new ones */
     [...modalTitleElement.children].forEach(child => {
@@ -111,6 +112,7 @@ function openPlayerModal(placementDiv, placement, ranks) {
 
 function closePlayerModal() {
     playerModalBackground.classList.add("hidden");
+    playerModal.classList.add("hidden");
 }
 
 modalExitButton.addEventListener('click', closePlayerModal)
