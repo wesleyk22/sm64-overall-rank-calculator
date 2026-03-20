@@ -12,7 +12,7 @@ function shrinkToFit(element) {
     /* Skip this whole function for short strings that we don't need to do the computationally intense check of 
      * if (element.scrollWidth > element.clientWidth) */
     if (element.textContent.length <= 10 && element.classList.contains("player-name")) {
-        console.log("skipping check");
+        // console.log("skipping check");
         return; // End this function
     } 
 

@@ -8,7 +8,7 @@ const pageText = document.querySelector(".page-text");
 /* Function to display a "page" of the leaderboard. Each page will have 50
  * placements */
 function visuallyDisplayPage(pageNum) {
-    overallLeaderboardPlacementsContainer.scrollTo({top: 0});
+    console.log("visually displaying page");
     /* Visually remove leaderboard placements, and also the spinner symbol */
     [...overallLeaderboardPlacementsContainer.children].forEach(child => {
         if (child.classList.contains("leaderboard-place-panel") || child.classList.contains("fa-spinner")) {
@@ -29,8 +29,7 @@ function visuallyDisplayPage(pageNum) {
         
     }
     // Update text
-    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`
-    setTimeout
+    pageText.innerHTML = `Page ${currentPage} of ${finalPage}`;
 }
 
 /* Functionality for the left and right buttons found in the bottom

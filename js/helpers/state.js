@@ -70,3 +70,4 @@ const numLBPlacements = 1000;
 /* Number that represents the current page that is being displayed */
 let currentPage = 1;
 let finalPage = 0; // This will be calculated and set to a number after the usersAndPointsArray is completed 
+
