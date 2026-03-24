@@ -1,0 +1,118 @@
+/* This file will contain styling specifically for the purpose of having responsive
+ * design and making the UI responsive and intuitive on various screen sizes */
+
+/* Media query for when the screen width is too small that the overall-leaderboard-container
+ * starts being "squished" */
+@media (max-width: 1160px) {
+    .overall-leaderboard-container {
+        width: 100%;
+        padding: 0;
+        margin-top: 25px;
+    }
+    .category-weights-container {
+        width: 100%;
+        padding: 0;
+        margin-top: 25px;
+    }
+    .modal-title .leaderboard-place-panel .player-icon {
+        display: none;
+    }
+    .modal-title .leaderboard-place-panel .rank-element {
+        display: none;
+    }
+}
+
+
+/* Media query for when it's too small to contain
+ * the players ranks in the placement panels */
+@media (max-width: 860px) {
+    body {
+        border-width: 0rem;
+        margin: 0rem;
+        padding: 0rem;
+    }
+}
+
+/* Media query for when it's too small to contain
+ * the players icon */
+@media (max-width: 650px) {
+    .player-icon {
+        display: none;
+    }
+    .rank-element {
+        display: none;
+    }
+    .overall-lb-nav-panel {
+        gap: 1rem;
+    }
+    .page-text {
+        font-size: 1rem;
+    }
+    .leaderboard-place-panel {
+        justify-content: center;
+        gap: 0rem;
+    }
+    .modal-title {
+        margin-top: 50px;
+    }
+    .category-weight-slider span {
+        font-size: 2rem;
+        width: 150px;
+    }
+    .player-times-and-points div {
+        font-size: 1.5rem;
+        margin-top: 0;
+    }
+}
+
+/* Phone size */
+@media (max-width: 425px) {
+    .player-name {
+        font-size: 1.25rem;
+        width: 60%;
+    }
+    .modal-title .leaderboard-place-panel {
+        width: 250px;
+    }
+    .nav-button {
+        width: 100px;
+    }
+    .nav-button span {
+        font-size: 0.75rem;
+    }
+    .player-rank {
+        font-size: 1rem;
+        width: 30%;
+    }
+    .category-weight-slider span {
+        font-size: 1rem;
+        width: 50px;
+    }
+    .slider-left-btn, .slider-right-btn {
+        font-size: 1.5rem;
+        width: 50px;
+        height: 50px;
+    }
+    .weights-reset-button {
+        width: 200px;
+    }
+    .credits {
+        font-size: 0.75rem;
+    }
+    .player-times-and-points div {
+        font-size: 1rem;
+        margin-top: 0;
+    }
+}
+
+/* Phone size height */
+
+@media (max-height: 800px) {
+    .player-modal {
+        height: 475px;
+    }
+    .player-times-and-points div {
+        font-size: 1rem;
+        margin-top: 0;
+    }
+}

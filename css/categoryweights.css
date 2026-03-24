@@ -44,6 +44,7 @@
 
 .category-weight-slider span {
     width: 300px;
+    text-align: center;
 }
 
 /* Styling for the slider buttons */
@@ -52,6 +53,9 @@
     padding: 1rem;
     margin: 0.5rem;
     border-width: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .slider-left-btn:hover,
@@ -64,6 +68,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-bottom: 3.5rem;
 }
 
 .weights-reset-button {

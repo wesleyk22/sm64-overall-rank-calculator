@@ -19,6 +19,7 @@ function shrinkToFit(element) {
     /* Check if the text is overflowing the container,
      * if it is we'll just reduce the font size a bit */
     for (let i = 0; i < 3; i++) {
+        
         if (element.scrollWidth > element.clientWidth) { 
             fontSize -= .25; // Subtract 0.25 rem
             element.style.fontSize = `${fontSize}rem`;
@@ -33,7 +34,7 @@ function shrinkToFit(element) {
 function formatTime(totalSeconds) {
     const hours = Math.floor((totalSeconds) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = Math.floor(totalSeconds % 60);
+    const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, "0");
 
     /* TODO: maybe add milliseconds */
 

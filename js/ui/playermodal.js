@@ -99,7 +99,6 @@ function openPlayerModal(placementDiv, placement, ranks) {
              * if it's not, we should clarify that it's a converted time in the string */
             if (categoryTime != consoleEquivalentTime) {
                 categoryElement.textContent = `#${categoryRank} in ${category} - ${categoryPoints.toFixed(2)} points - ${formatTime(consoleEquivalentTime)} (emu/vc: ${formatTime(categoryTime)})`;
-                categoryElement.style = "font-size: 1.5rem;";
             } else {
                 categoryElement.textContent = `#${categoryRank} in ${category} - ${categoryPoints.toFixed(2)} points - ${formatTime(categoryTime)}`;
             }
